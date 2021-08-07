@@ -4,7 +4,7 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import { CONSTANT_ONE, CONSTANT_ZERO } from '../util'
+import { CONSTANT_ZERO } from '../util'
 
 /*
   pi나 e같은 것들을 표현하기 위함
