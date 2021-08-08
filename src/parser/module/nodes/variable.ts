@@ -4,7 +4,7 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import { CONSTANT_ONE, CONSTANT_ZERO } from '../util'
+import { CONSTANT_ONE, CONSTANT_ZERO } from './constant'
 
 export default class Variable implements Expression {
   constructor(public readonly name: string) {}
@@ -23,5 +23,9 @@ export default class Variable implements Expression {
   ): Expression {
     option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
     return this
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Variable && this.name === expression.name
   }
 }

@@ -4,7 +4,7 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import { CONSTANT_ZERO } from '../util'
+import { CONSTANT_ZERO } from './constant'
 
 /*
   pi나 e같은 것들을 표현하기 위함
@@ -37,5 +37,9 @@ export default class NamedConstant implements Expression {
     option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
 
     return this
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof NamedConstant && this.name === expression.name
   }
 }

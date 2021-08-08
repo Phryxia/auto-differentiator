@@ -1,13 +1,16 @@
 import {
+  Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
   OptimizerOption,
   Variables,
 } from '../model'
+import Sub from './sub'
 import Constant from './constant'
 import { isConstantZero } from '../util'
+import { isEquivalentAddSub, optimizeAddSub } from '../optimizer'
 
-export default class Add implements Expression {
+export default class Add implements Expression, Binary {
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -35,6 +38,13 @@ export default class Add implements Expression {
     if (isConstantZero(expr0)) return expr1
     if (isConstantZero(expr1)) return expr0
 
-    return new Add(expr0, expr1)
+    return optimizeAddSub(new Add(expr0, expr1))
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return (
+      (expression instanceof Add || expression instanceof Sub) &&
+      isEquivalentAddSub(this, expression)
+    )
   }
 }

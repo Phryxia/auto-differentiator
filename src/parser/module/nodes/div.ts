@@ -1,4 +1,5 @@
 import {
+  Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
   OptimizerOption,
@@ -6,18 +7,12 @@ import {
 } from '../model'
 import Mul from './mul'
 import Sub from './sub'
-import PowerInt from './powerInt'
-import Constant from './constant'
-import {
-  CONSTANT_ZERO,
-  isConstantMinusOne,
-  isConstantOne,
-  isConstantZero,
-} from '../util'
-import Negative from './negative'
-import Reciprocal from './reciprocal'
+import Constant, { CONSTANT_MINUS_ONE, CONSTANT_ZERO } from './constant'
+import { isConstantMinusOne, isConstantOne, isConstantZero } from '../util'
+import { isEquivalentMulDiv, optimizeMulDiv } from '../optimizer'
+import Power from './power'
 
-export default class Div implements Expression {
+export default class Div implements Expression, Binary {
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -30,7 +25,7 @@ export default class Div implements Expression {
         new Mul(this.expr0.differentiate(variableName), this.expr1),
         new Mul(this.expr0, this.expr1.differentiate(variableName))
       ),
-      new PowerInt(this.expr1, 2)
+      new Power(this.expr1, new Constant(2))
     )
   }
 
@@ -48,11 +43,17 @@ export default class Div implements Expression {
     if (isConstantZero(expr0)) return CONSTANT_ZERO
     if (isConstantZero(expr1)) return new Constant(NaN)
 
-    if (isConstantOne(expr0)) return new Reciprocal(expr1)
     if (isConstantOne(expr1)) return expr0
 
-    if (isConstantMinusOne(expr1)) return new Negative(expr0)
+    if (isConstantMinusOne(expr1)) return new Mul(CONSTANT_MINUS_ONE, expr0)
 
-    return new Div(expr0, expr1)
+    return optimizeMulDiv(new Div(expr0, expr1))
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return (
+      (expression instanceof Mul || expression instanceof Div) &&
+      isEquivalentMulDiv(this, expression)
+    )
   }
 }

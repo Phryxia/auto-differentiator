@@ -14,7 +14,6 @@ import Ln from './module/nodes/ln'
 import Log from './module/nodes/log'
 import Mul from './module/nodes/mul'
 import NamedConstant from './module/nodes/namedConstant'
-import Negative from './module/nodes/negative'
 import Power from './module/nodes/power'
 import Sqrt from './module/nodes/sqrt'
 import Sub from './module/nodes/sub'
@@ -377,7 +376,10 @@ export default class Parser {
       const expr = parseLeaf()
 
       if (isMinus) {
-        return new Negative(expr)
+        if (expr instanceof Constant) {
+          return new Constant(-expr.value)
+        }
+        return new Mul(new Constant(-1), expr)
       }
       return expr
     }

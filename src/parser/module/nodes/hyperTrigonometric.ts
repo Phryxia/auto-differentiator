@@ -4,10 +4,9 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import Constant from './constant'
+import Constant, { CONSTANT_MINUS_ONE } from './constant'
 import Mul from './mul'
-import Negative from './negative'
-import PowerInt from './powerInt'
+import Power from './power'
 
 export class Sinh implements Expression {
   constructor(public expr: Expression) {}
@@ -30,6 +29,10 @@ export class Sinh implements Expression {
     if (expr instanceof Constant) return new Constant(Math.sinh(expr.value))
 
     return new Sinh(expr)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Sinh && this.expr.isEquivalent(expression.expr)
   }
 }
 
@@ -55,6 +58,10 @@ export class Cosh implements Expression {
 
     return new Cosh(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Cosh && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Tanh implements Expression {
@@ -67,7 +74,7 @@ export class Tanh implements Expression {
   differentiate(variableName: string): Expression {
     return new Mul(
       this.expr.differentiate(variableName),
-      new PowerInt(new Sech(this.expr), 2)
+      new Power(new Sech(this.expr), new Constant(2))
     )
   }
 
@@ -82,6 +89,10 @@ export class Tanh implements Expression {
 
     return new Tanh(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Tanh && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Csch implements Expression {
@@ -92,7 +103,8 @@ export class Csch implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Negative(
+    return new Mul(
+      new Constant(-1),
       new Mul(
         new Mul(this.expr.differentiate(variableName), this),
         new Coth(this.expr)
@@ -111,6 +123,10 @@ export class Csch implements Expression {
 
     return new Csch(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Csch && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Sech implements Expression {
@@ -121,7 +137,8 @@ export class Sech implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Negative(
+    return new Mul(
+      CONSTANT_MINUS_ONE,
       new Mul(
         new Mul(this.expr.differentiate(variableName), this),
         new Tanh(this.expr)
@@ -140,6 +157,10 @@ export class Sech implements Expression {
 
     return new Sech(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Sech && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Coth implements Expression {
@@ -150,10 +171,11 @@ export class Coth implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Negative(
+    return new Mul(
+      CONSTANT_MINUS_ONE,
       new Mul(
         this.expr.differentiate(variableName),
-        new PowerInt(new Csch(this.expr), 2)
+        new Power(new Csch(this.expr), new Constant(2))
       )
     )
   }
@@ -168,5 +190,9 @@ export class Coth implements Expression {
     if (expr instanceof Constant) return new Constant(1 / Math.tanh(expr.value))
 
     return new Coth(expr)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Coth && this.expr.isEquivalent(expression.expr)
   }
 }

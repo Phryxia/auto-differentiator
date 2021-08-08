@@ -4,10 +4,9 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import Constant from './constant'
+import Constant, { CONSTANT_MINUS_ONE } from './constant'
 import Mul from './mul'
-import Negative from './negative'
-import PowerInt from './powerInt'
+import Power from './power'
 
 export class Sin implements Expression {
   constructor(public expr: Expression) {}
@@ -31,6 +30,10 @@ export class Sin implements Expression {
 
     return new Sin(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Sin && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Cos implements Expression {
@@ -41,7 +44,8 @@ export class Cos implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Negative(
+    return new Mul(
+      CONSTANT_MINUS_ONE,
       new Mul(this.expr.differentiate(variableName), new Sin(this.expr))
     )
   }
@@ -57,6 +61,10 @@ export class Cos implements Expression {
 
     return new Cos(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Cos && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Tan implements Expression {
@@ -69,7 +77,7 @@ export class Tan implements Expression {
   differentiate(variableName: string): Expression {
     return new Mul(
       this.expr.differentiate(variableName),
-      new PowerInt(new Sec(this.expr), 2)
+      new Power(new Sec(this.expr), new Constant(2))
     )
   }
 
@@ -84,6 +92,10 @@ export class Tan implements Expression {
 
     return new Tan(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Tan && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Csc implements Expression {
@@ -94,7 +106,8 @@ export class Csc implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Negative(
+    return new Mul(
+      CONSTANT_MINUS_ONE,
       new Mul(
         this.expr.differentiate(variableName),
         new Mul(this, new Cot(this.expr))
@@ -112,6 +125,10 @@ export class Csc implements Expression {
     if (expr instanceof Constant) return new Constant(1 / Math.sin(expr.value))
 
     return new Csc(expr)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Csc && this.expr.isEquivalent(expression.expr)
   }
 }
 
@@ -140,6 +157,10 @@ export class Sec implements Expression {
 
     return new Sec(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Sec && this.expr.isEquivalent(expression.expr)
+  }
 }
 
 export class Cot implements Expression {
@@ -150,10 +171,11 @@ export class Cot implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Negative(
+    return new Mul(
+      CONSTANT_MINUS_ONE,
       new Mul(
         this.expr.differentiate(variableName),
-        new PowerInt(new Csc(this.expr), 2)
+        new Power(new Csc(this.expr), new Constant(2))
       )
     )
   }
@@ -168,5 +190,9 @@ export class Cot implements Expression {
     if (expr instanceof Constant) return new Constant(1 / Math.tan(expr.value))
 
     return new Cot(expr)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Cot && this.expr.isEquivalent(expression.expr)
   }
 }

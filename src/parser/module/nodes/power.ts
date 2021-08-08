@@ -1,6 +1,7 @@
 import Add from './add'
 import Div from './div'
 import {
+  Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
   OptimizerOption,
@@ -8,18 +9,17 @@ import {
 } from '../model'
 import Ln from './ln'
 import Mul from './mul'
-import Constant from './constant'
-import { CONSTANT_ONE, isConstantOne, isConstantZero } from '../util'
-import PowerInt from './powerInt'
+import Constant, { CONSTANT_ONE } from './constant'
+import { isConstantOne, isConstantZero } from '../util'
 import NamedConstant from './namedConstant'
 
-export default class Power implements Expression {
-  constructor(public base: Expression, public exponent: Expression) {}
+export default class Power implements Expression, Binary {
+  constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.pow(
-      this.base.evaluate(variables),
-      this.exponent.evaluate(variables)
+      this.expr0.evaluate(variables),
+      this.expr1.evaluate(variables)
     )
   }
 
@@ -27,10 +27,10 @@ export default class Power implements Expression {
     return new Mul(
       this,
       new Add(
-        new Mul(this.exponent.differentiate(variableName), new Ln(this.base)),
+        new Mul(this.expr1.differentiate(variableName), new Ln(this.expr0)),
         new Mul(
-          this.exponent,
-          new Div(this.base.differentiate(variableName), this.base)
+          this.expr1,
+          new Div(this.expr0.differentiate(variableName), this.expr0)
         )
       )
     )
@@ -41,8 +41,8 @@ export default class Power implements Expression {
   ): Expression {
     option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
 
-    const base = this.base.optimize(option)
-    const exponent = this.exponent.optimize(option)
+    const base = this.expr0.optimize(option)
+    const exponent = this.expr1.optimize(option)
 
     if (base instanceof Constant && exponent instanceof Constant)
       return new Constant(Math.pow(base.value, exponent.value))
@@ -59,16 +59,18 @@ export default class Power implements Expression {
 
     // 지수법칙
     if (base instanceof Power)
-      return new Power(base.base, new Mul(base.exponent, exponent)).optimize(
+      return new Power(base.expr0, new Mul(base.expr1, exponent)).optimize(
         option
       )
 
-    if (base instanceof PowerInt)
-      return new Power(
-        base.expr,
-        new Mul(new Constant(base.exponent), exponent)
-      ).optimize(option)
-
     return new Power(base, exponent)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return (
+      expression instanceof Power &&
+      this.expr0.isEquivalent(expression.expr0) &&
+      this.expr1.isEquivalent(expression.expr1)
+    )
   }
 }

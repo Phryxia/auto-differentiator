@@ -4,8 +4,7 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import { CONSTANT_ONE } from '../util'
-import Constant from './constant'
+import Constant, { CONSTANT_ONE } from './constant'
 import Div from './div'
 import NamedConstant from './namedConstant'
 
@@ -32,5 +31,9 @@ export default class Ln implements Expression {
     if (expr instanceof NamedConstant && expr.name === 'e') return CONSTANT_ONE
 
     return new Ln(expr)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Ln && this.expr.isEquivalent(expression.expr)
   }
 }

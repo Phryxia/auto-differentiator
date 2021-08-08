@@ -1,22 +1,17 @@
 import Add from './add'
 import {
+  Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
   OptimizerOption,
   Variables,
 } from '../model'
-import Constant from './constant'
-import {
-  CONSTANT_ZERO,
-  isConstantMinusOne,
-  isConstantOne,
-  isConstantZero,
-} from '../util'
-import Negative from './negative'
-import Reciprocal from './reciprocal'
+import Constant, { CONSTANT_ZERO } from './constant'
+import { isConstantOne, isConstantZero } from '../util'
 import Div from './div'
+import { isEquivalentMulDiv, optimizeMulDiv } from '../optimizer'
 
-export default class Mul implements Expression {
+export default class Mul implements Expression, Binary {
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -46,15 +41,13 @@ export default class Mul implements Expression {
     if (isConstantOne(expr0)) return expr1
     if (isConstantOne(expr1)) return expr0
 
-    if (isConstantMinusOne(expr0)) return new Negative(expr1)
-    if (isConstantMinusOne(expr1)) return new Negative(expr0)
+    return optimizeMulDiv(new Mul(expr0, expr1))
+  }
 
-    if (expr0 instanceof Reciprocal && !(expr1 instanceof Reciprocal))
-      return new Div(expr1, expr0.expr).optimize(option)
-
-    if (expr1 instanceof Reciprocal && !(expr0 instanceof Reciprocal))
-      return new Div(expr0, expr1.expr).optimize(option)
-
-    return new Mul(expr0, expr1)
+  isEquivalent(expression: Expression): boolean {
+    return (
+      (expression instanceof Mul || expression instanceof Div) &&
+      isEquivalentMulDiv(this, expression)
+    )
   }
 }

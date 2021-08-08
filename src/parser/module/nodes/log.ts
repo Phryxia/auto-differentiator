@@ -8,10 +8,10 @@ import Sub from './sub'
 import Mul from './mul'
 import Div from './div'
 import Ln from './ln'
-import PowerInt from './powerInt'
-import { CONSTANT_ZERO, isConstantOne } from '../util'
-import Constant from './constant'
+import { isConstantOne } from '../util'
+import Constant, { CONSTANT_ZERO } from './constant'
 import NamedConstant from './namedConstant'
+import Power from './power'
 
 export default class Log implements Expression {
   constructor(public expr: Expression, public base: Expression) {}
@@ -33,7 +33,7 @@ export default class Log implements Expression {
         ),
         new Mul(new Ln(this.expr), lnBase.differentiate(variableName))
       ),
-      new PowerInt(lnBase, 2)
+      new Power(lnBase, new Constant(2))
     )
   }
 
@@ -54,5 +54,13 @@ export default class Log implements Expression {
     if (isConstantOne(expr)) return CONSTANT_ZERO
 
     return new Log(base, expr)
+  }
+
+  isEquivalent(expression: Expression): boolean {
+    return (
+      expression instanceof Log &&
+      this.base.isEquivalent(expression.base) &&
+      this.expr.isEquivalent(expression.expr)
+    )
   }
 }

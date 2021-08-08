@@ -33,4 +33,8 @@ export default class Sqrt implements Expression {
 
     return new Sqrt(expr)
   }
+
+  isEquivalent(expression: Expression): boolean {
+    return expression instanceof Sqrt && this.expr.isEquivalent(expression.expr)
+  }
 }

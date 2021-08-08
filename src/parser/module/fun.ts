@@ -1,6 +1,6 @@
 import { Expression } from './model'
 import Add from './nodes/add'
-import Constant from './nodes/constant'
+import Constant, { CONSTANT_ONE } from './nodes/constant'
 import Div from './nodes/div'
 import { Cosh, Coth, Csch, Sech, Sinh, Tanh } from './nodes/hyperTrigonometric'
 import Ln from './nodes/ln'
@@ -12,7 +12,6 @@ import Sqrt from './nodes/sqrt'
 import Sub from './nodes/sub'
 import { Cos, Cot, Csc, Sec, Sin, Tan } from './nodes/trigonometric'
 import Variable from './nodes/variable'
-import { CONSTANT_ONE } from './util'
 
 export function createRandomVariableName() {
   return 'x'
