@@ -50,6 +50,18 @@ export default class Power implements Expression, Binary {
     if (isConstantZero(exponent)) return CONSTANT_ONE
     if (isConstantOne(exponent)) return base
 
+    // 역수처리
+    if (exponent instanceof Constant && exponent.value < 0) {
+      if (exponent.value === -1) {
+        return new Div(CONSTANT_ONE, base)
+      }
+      return new Div(
+        CONSTANT_ONE,
+        new Power(base, new Constant(-exponent.value))
+      )
+    }
+
+    // e^ln(x) => x
     if (
       base instanceof NamedConstant &&
       base.name === 'e' &&

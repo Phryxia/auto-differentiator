@@ -1,6 +1,9 @@
 import { Expression, Binary, isBinary } from './model'
-import Constant from './nodes/constant'
+import Add from './nodes/add'
+import Constant, { CONSTANT_MINUS_ONE } from './nodes/constant'
 import Log from './nodes/log'
+import Mul from './nodes/mul'
+import Sub from './nodes/sub'
 import Variable from './nodes/variable'
 
 export function isConstantZero(expr: Expression): boolean {
@@ -36,4 +39,29 @@ export function isVariableUsed(
     )
 
   return isVariableUsed(anyExpr.expr, variableName)
+}
+
+export function joinAdd(
+  expressions: { expr: Expression; isNegative?: boolean }[]
+): Expression {
+  if (expressions.length === 0)
+    throw new Error('[utils.joinAdd] Array length is zero')
+
+  let lvalue
+
+  if (expressions[0].isNegative) {
+    lvalue = new Mul(CONSTANT_MINUS_ONE, expressions[0].expr)
+  } else {
+    lvalue = expressions[0].expr
+  }
+
+  for (let i = 1; i < expressions.length; ++i) {
+    if (expressions[i].isNegative) {
+      lvalue = new Sub(lvalue, expressions[i].expr)
+    } else {
+      lvalue = new Add(lvalue, expressions[i].expr)
+    }
+  }
+
+  return lvalue
 }

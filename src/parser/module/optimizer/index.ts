@@ -5,6 +5,9 @@ import Div from '../nodes/div'
 import Mul from '../nodes/mul'
 import Sub from '../nodes/sub'
 import transformToTerms, { Term } from './term'
+import transformToExponent, { Exponent } from './exponent'
+import { joinAdd } from '../util'
+import Power from '../nodes/power'
 
 export interface Bucket<T> {
   [nodeType: string]: T[]
@@ -25,6 +28,7 @@ export function optimizeAddSub(node: Add | Sub): Expression {
   for (let i = 0; i < terms.length; ++i) {
     if (terms[i].remain instanceof Constant) {
       constantIndex = i
+      isReserved[i] = true
       continue
     }
     if (isReserved[i]) continue
@@ -91,60 +95,103 @@ export function optimizeAddSub(node: Add | Sub): Expression {
 }
 
 export function optimizeMulDiv(node: Mul | Div): Expression {
-  const bucket: Bucket<{ expression: Expression; isInverted: boolean }> = {}
+  const exponents = transformToExponent(node)
 
-  collectMultiplyingChilds(node, bucket)
+  // [x항들, xy항들, a항들 ...]
+  let shapeBank: Exponent[][] = []
+
+  // 같은 밑으로 분류
+  let constantValue = 1
+  const isReserved: boolean[] = []
+  for (let i = 0; i < exponents.length; ++i) {
+    // 순수상수인 경우 별도로 합침
+    if (
+      exponents[i].base instanceof Constant &&
+      exponents[i].exponent instanceof Constant
+    ) {
+      constantValue *= Math.pow(
+        // @ts-ignore
+        exponents[i].base.value,
+        // @ts-ignore
+        exponents[i].exponent.value
+      )
+      isReserved[i] = true
+      continue
+    }
+
+    if (isReserved[i]) continue
+    isReserved[i] = true
+
+    const sameShape: Exponent[] = [exponents[i]]
+    for (let j = i + 1; j < exponents.length; ++j) {
+      if (isReserved[j]) continue
+
+      if (exponents[i].base.isEquivalent(exponents[j].base)) {
+        isReserved[j] = true
+        sameShape.push(exponents[j])
+      }
+    }
+
+    shapeBank.push(sameShape)
+  }
 
   let lvalue: Expression | null = null
 
-  for (const typeName in bucket) {
-    let mergedNode: Expression
-    let isInverted: boolean
+  shapeBank.forEach((sameShape) => {
+    let exponent = joinAdd(
+      sameShape.map(({ exponent }) => ({ expr: exponent }))
+    )
+    exponent = exponent.optimize()
 
-    if (typeName === 'Constant') {
-      // Merge constants
-      const value = bucket[typeName].reduce(
-        (product, { expression, isInverted }) => {
-          if (isInverted) return product / (expression as Constant).value
-          return product * (expression as Constant).value
-        },
-        1
-      )
+    let isInverted = false
+    let rvalue: Expression
+    if (exponent instanceof Constant) {
+      if (exponent.value === 0) return
 
-      if (value === 1) continue
-
-      mergedNode = new Constant(value)
-      isInverted = false
+      if (exponent.value === 1) {
+        rvalue = sameShape[0].base
+      } else if (exponent.value === -1) {
+        isInverted = true
+        rvalue = sameShape[0].base
+      } else if (exponent.value > 0) {
+        rvalue = new Power(sameShape[0].base, exponent)
+      } else {
+        isInverted = true
+        rvalue = new Power(sameShape[0].base, new Constant(-exponent.value))
+      }
     } else {
-      mergedNode = bucket[typeName].reduce(
-        (lvalue: Expression | null, { expression, isInverted }) => {
-          if (!lvalue) return expression
-          if (isInverted) return new Div(lvalue, expression)
-          return new Mul(lvalue, expression)
-        },
-        null
-      )!
-      isInverted =
-        bucket[typeName].length === 1 ? bucket[typeName][0].isInverted : false
+      rvalue = new Power(sameShape[0].base, exponent)
     }
 
     if (lvalue) {
       if (isInverted) {
-        lvalue = new Div(lvalue, mergedNode)
+        lvalue = new Div(lvalue, rvalue)
       } else {
-        lvalue = new Mul(lvalue, mergedNode)
+        lvalue = new Mul(lvalue, rvalue)
       }
     } else {
       if (isInverted) {
-        lvalue = new Div(CONSTANT_ONE, mergedNode)
+        lvalue = new Div(CONSTANT_ONE, rvalue)
       } else {
-        lvalue = mergedNode
+        lvalue = rvalue
       }
+    }
+  })
+
+  if (constantValue !== 1) {
+    const constant = new Constant(constantValue)
+    if (lvalue) {
+      lvalue = new Mul(constant, lvalue)
+    } else {
+      lvalue = constant
     }
   }
 
-  // nodes의 길이가 2 이상이 보장되기 때문에 반드시 null이 아니다
-  return lvalue!
+  if (!lvalue) {
+    lvalue = CONSTANT_ONE
+  }
+
+  return lvalue
 }
 
 export function collectAdditiveChilds(
