@@ -1,24 +1,29 @@
 import { Expression } from './module/model'
-import Add from './module/nodes/add'
-import Constant from './module/nodes/constant'
-import Div from './module/nodes/div'
 import {
+  Constant,
+  NamedConstant,
+  Variable,
+  Add,
+  Sub,
+  Mul,
+  Div,
+  Ln,
+  Log,
+  Power,
+  Sqrt,
+  Cos,
+  Cot,
+  Csc,
+  Sec,
+  Sin,
+  Tan,
   Cosh,
   Coth,
   Csch,
   Sech,
   Sinh,
   Tanh,
-} from './module/nodes/hyperTrigonometric'
-import Ln from './module/nodes/ln'
-import Log from './module/nodes/log'
-import Mul from './module/nodes/mul'
-import NamedConstant from './module/nodes/namedConstant'
-import Power from './module/nodes/power'
-import Sqrt from './module/nodes/sqrt'
-import Sub from './module/nodes/sub'
-import { Cos, Cot, Csc, Sec, Sin, Tan } from './module/nodes/trigonometric'
-import Variable from './module/nodes/variable'
+} from './module/nodes'
 
 enum TokenType {
   NUMBER = 'number',

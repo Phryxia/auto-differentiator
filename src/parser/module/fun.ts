@@ -1,17 +1,29 @@
 import { Expression } from './model'
-import Add from './nodes/add'
+import {
+  Add,
+  Cos,
+  Cosh,
+  Cot,
+  Coth,
+  Csc,
+  Csch,
+  Div,
+  Ln,
+  Log,
+  Mul,
+  NamedConstant,
+  Power,
+  Sec,
+  Sech,
+  Sin,
+  Sinh,
+  Sqrt,
+  Sub,
+  Tan,
+  Tanh,
+  Variable,
+} from './nodes'
 import Constant, { CONSTANT_ONE } from './nodes/constant'
-import Div from './nodes/div'
-import { Cosh, Coth, Csch, Sech, Sinh, Tanh } from './nodes/hyperTrigonometric'
-import Ln from './nodes/ln'
-import Log from './nodes/log'
-import Mul from './nodes/mul'
-import NamedConstant from './nodes/namedConstant'
-import Power from './nodes/power'
-import Sqrt from './nodes/sqrt'
-import Sub from './nodes/sub'
-import { Cos, Cot, Csc, Sec, Sin, Tan } from './nodes/trigonometric'
-import Variable from './nodes/variable'
 
 export function createRandomVariableName() {
   return 'x'

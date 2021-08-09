@@ -1,8 +1,7 @@
-import { Expression } from '../model'
-import Constant, { CONSTANT_MINUS_ONE, CONSTANT_ONE } from '../nodes/constant'
-import Div from '../nodes/div'
-import Mul from '../nodes/mul'
-import Power from '../nodes/power'
+import { Expression } from '../../model'
+import { CONSTANT_MINUS_ONE, CONSTANT_ONE } from '../constant'
+import { Mul, Div } from '.'
+import Power from '../power'
 
 export interface Exponent {
   exponent: Expression
@@ -44,7 +43,7 @@ function separateConstant(root: Expression, isInverted: boolean): Exponent {
   }
 }
 
-export default function transformToTerms(root: Mul | Div): Exponent[] {
+export default function transformToExponent(root: Mul | Div): Exponent[] {
   const roots = findExponentRoots(root)
 
   return roots.map(([root, isNegative]) => separateConstant(root, isNegative))

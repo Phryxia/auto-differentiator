@@ -1,17 +1,29 @@
 import { Expression, isUnary } from './model'
-import Add from './nodes/add'
-import Constant from './nodes/constant'
-import Div from './nodes/div'
-import { Cosh, Coth, Csch, Sech, Sinh, Tanh } from './nodes/hyperTrigonometric'
-import Ln from './nodes/ln'
-import Log from './nodes/log'
-import Mul from './nodes/mul'
-import NamedConstant from './nodes/namedConstant'
-import Power from './nodes/power'
-import Sqrt from './nodes/sqrt'
-import Sub from './nodes/sub'
-import { Cos, Cot, Csc, Sec, Sin, Tan } from './nodes/trigonometric'
-import Variable from './nodes/variable'
+import {
+  Add,
+  Sub,
+  Mul,
+  Div,
+  Constant,
+  NamedConstant,
+  Variable,
+  Ln,
+  Log,
+  Power,
+  Sqrt,
+  Cosh,
+  Coth,
+  Csch,
+  Sech,
+  Sinh,
+  Tanh,
+  Cos,
+  Cot,
+  Csc,
+  Sec,
+  Sin,
+  Tan,
+} from './nodes'
 
 function wrapParenthesis(str: string, isWrapped: boolean): string {
   return isWrapped ? `(${str})` : str

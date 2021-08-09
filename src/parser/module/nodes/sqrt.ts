@@ -4,9 +4,8 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
+import { Mul, Div } from './multiplicative'
 import Constant from './constant'
-import Div from './div'
-import Mul from './mul'
 
 export default class Sqrt implements Expression {
   constructor(public expr: Expression) {}

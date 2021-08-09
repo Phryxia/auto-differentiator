@@ -1,5 +1,3 @@
-import Add from './add'
-import Div from './div'
 import {
   Binary,
   DEFAULT_OPTIMIZER_OPTION,
@@ -7,8 +5,9 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
+import { Add } from './additive'
+import { Mul, Div } from './multiplicative'
 import Ln from './ln'
-import Mul from './mul'
 import Constant, { CONSTANT_ONE } from './constant'
 import { isConstantOne, isConstantZero } from '../util'
 import NamedConstant from './namedConstant'

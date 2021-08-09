@@ -1,14 +1,12 @@
 import { ReactNode } from 'react'
 import { Expression, isBinary } from '../parser/module/model'
-import Add from '../parser/module/nodes/add'
+import { Add, Sub } from '../parser/module/nodes/additive'
+import { Mul, Div } from '../parser/module/nodes/multiplicative'
 import Constant from '../parser/module/nodes/constant'
-import Div from '../parser/module/nodes/div'
-import Log from '../parser/module/nodes/log'
-import Mul from '../parser/module/nodes/mul'
 import NamedConstant from '../parser/module/nodes/namedConstant'
-import Power from '../parser/module/nodes/power'
-import Sub from '../parser/module/nodes/sub'
 import Variable from '../parser/module/nodes/variable'
+import Log from '../parser/module/nodes/log'
+import Power from '../parser/module/nodes/power'
 import '../styles/token.css'
 
 function Wrap({

@@ -33,3 +33,7 @@ export interface Binary extends Expression {
 export function isBinary(expr: any): expr is Binary {
   return !!expr?.expr0 && !!expr?.expr1
 }
+
+export interface Bucket<T> {
+  [nodeType: string]: T[]
+}

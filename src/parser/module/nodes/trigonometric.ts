@@ -5,7 +5,7 @@ import {
   Variables,
 } from '../model'
 import Constant, { CONSTANT_MINUS_ONE } from './constant'
-import Mul from './mul'
+import { Mul } from './multiplicative'
 import Power from './power'
 
 export class Sin implements Expression {

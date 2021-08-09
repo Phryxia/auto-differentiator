@@ -4,9 +4,8 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
-import Sub from './sub'
-import Mul from './mul'
-import Div from './div'
+import { Sub } from './additive'
+import { Mul, Div } from './multiplicative'
 import Ln from './ln'
 import { isConstantOne } from '../util'
 import Constant, { CONSTANT_ZERO } from './constant'

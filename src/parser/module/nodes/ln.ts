@@ -4,8 +4,8 @@ import {
   OptimizerOption,
   Variables,
 } from '../model'
+import { Div } from './multiplicative'
 import Constant, { CONSTANT_ONE } from './constant'
-import Div from './div'
 import NamedConstant from './namedConstant'
 
 export default class Ln implements Expression {

@@ -4,13 +4,13 @@ import {
   Expression,
   OptimizerOption,
   Variables,
-} from '../model'
+} from '../../model'
 import Mul from './mul'
-import Sub from './sub'
-import Constant, { CONSTANT_MINUS_ONE, CONSTANT_ZERO } from './constant'
-import { isConstantMinusOne, isConstantOne, isConstantZero } from '../util'
-import { isEquivalentMulDiv, optimizeMulDiv } from '../optimizer'
-import Power from './power'
+import { Sub } from '../additive'
+import Constant, { CONSTANT_MINUS_ONE, CONSTANT_ZERO } from '../constant'
+import { isConstantMinusOne, isConstantOne, isConstantZero } from '../../util'
+import Power from '../power'
+import { optimizeMulDiv, isEquivalentMulDiv } from './common'
 
 export default class Div implements Expression, Binary {
   constructor(public expr0: Expression, public expr1: Expression) {}
@@ -51,9 +51,6 @@ export default class Div implements Expression, Binary {
   }
 
   isEquivalent(expression: Expression): boolean {
-    return (
-      (expression instanceof Mul || expression instanceof Div) &&
-      isEquivalentMulDiv(this, expression)
-    )
+    return isEquivalentMulDiv(this, expression)
   }
 }
