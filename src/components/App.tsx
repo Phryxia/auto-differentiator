@@ -1,5 +1,11 @@
+import MathTest from './math-test'
+
 function App() {
-  return <></>
+  return (
+    <>
+      <MathTest />
+    </>
+  )
 }
 
 export default App

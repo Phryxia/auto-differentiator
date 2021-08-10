@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+}
+
+.entry {
+  border-radius: 5px;
+  margin-right: 5px;
+
+  background: none;
+  color: black;
+  cursor: pointer;
+}
+
+.selected {
+  background: black;
+  color: white;
+}

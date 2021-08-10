@@ -11,7 +11,10 @@ import {
   Log,
   Power,
 } from '../../math/nodes'
-import '../../styles/token.css'
+import styles from '../../styles/token.module.css'
+import classNames from 'classnames'
+
+const cx = classNames.bind(styles)
 
 function Wrap({
   isWrapped,
@@ -25,21 +28,21 @@ function Wrap({
 
 export default function ExprDom({ expr }: { expr: Expression }) {
   if (expr instanceof Constant)
-    return <span className="token">{expr.value}</span>
+    return <span className={cx('token')}>{expr.value}</span>
 
   if (expr instanceof Variable || expr instanceof NamedConstant)
-    return <span className="token">{expr.name}</span>
+    return <span className={cx('token')}>{expr.name}</span>
 
   if (expr instanceof Add)
     return (
-      <span className="token">
+      <span className={cx('token')}>
         <ExprDom expr={expr.expr0} /> + <ExprDom expr={expr.expr1} />
       </span>
     )
 
   if (expr instanceof Sub)
     return (
-      <span className="token">
+      <span className={cx('token')}>
         <ExprDom expr={expr.expr0} /> -{' '}
         <Wrap isWrapped={isBinary(expr.expr0)}>
           <ExprDom expr={expr.expr1} />
@@ -49,7 +52,7 @@ export default function ExprDom({ expr }: { expr: Expression }) {
 
   if (expr instanceof Mul)
     return (
-      <span className="token">
+      <span className={cx('token')}>
         <Wrap isWrapped={isBinary(expr.expr0)}>
           <ExprDom expr={expr.expr0} />
         </Wrap>{' '}
@@ -62,7 +65,7 @@ export default function ExprDom({ expr }: { expr: Expression }) {
 
   if (expr instanceof Div)
     return (
-      <span className="token frac">
+      <span className={cx('token', 'frac')}>
         <div>
           <ExprDom expr={expr.expr0} />
         </div>
@@ -75,11 +78,11 @@ export default function ExprDom({ expr }: { expr: Expression }) {
 
   if (expr instanceof Power)
     return (
-      <span className="token pow">
+      <span className={cx('token', 'pow')}>
         <Wrap isWrapped={isBinary(expr.expr0)}>
           <ExprDom expr={expr.expr0} />
         </Wrap>
-        <span className="exponent">
+        <span className={cx('exponent')}>
           <ExprDom expr={expr.expr1} />
         </span>
       </span>
@@ -87,9 +90,9 @@ export default function ExprDom({ expr }: { expr: Expression }) {
 
   if (expr instanceof Log)
     return (
-      <span className="token log">
+      <span className={cx('token', 'log')}>
         log_
-        <span className="logbase">
+        <span className={cx('logbase')}>
           <ExprDom expr={expr.base} />
         </span>
         (<ExprDom expr={expr.expr} />)
@@ -97,7 +100,7 @@ export default function ExprDom({ expr }: { expr: Expression }) {
     )
 
   return (
-    <span className="token">
+    <span className={cx('token')}>
       {expr.constructor.name.toLowerCase()}(
       <ExprDom expr={(expr as any).expr} />)
     </span>
