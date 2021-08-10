@@ -3,15 +3,15 @@
 }
 
 .token {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
+  align-content: flex-start;
   margin: 2px;
   padding: 2px;
   border: 1px solid black;
   border-radius: 3px;
   vertical-align: center;
-  /* justify-content: start; */
 }
 
 .pow {

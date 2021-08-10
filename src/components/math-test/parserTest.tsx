@@ -4,6 +4,10 @@ import Parser, { Token } from '../../math/parser'
 import { renderToText } from '../../math/render'
 import ExprDom from './ExprDom'
 import TextInput from '../TextInput'
+import classNames from 'classnames/bind'
+import tokenStyles from '../../styles/token/token.module.css'
+
+const cx = classNames.bind(tokenStyles)
 
 const parser = new Parser()
 
@@ -12,6 +16,8 @@ export default function ParserTest() {
   const [tokens, setTokens] = useState<Token[]>([])
   const [warning, setWarning] = useState<string>('')
   const [error, setError] = useState<string>('')
+
+  const [hoverIndex, setHoverIndex] = useState<number>(-1)
 
   function handleChange(value: string): void {
     const { tokens } = parser.tokenize(value)
@@ -29,11 +35,21 @@ export default function ParserTest() {
       <TextInput onChange={handleChange} />
 
       <h2>Tokens</h2>
-      {tokens.map((token, index) => (
-        <div key={index}>
-          {token.content} (type: {token.type})
-        </div>
-      ))}
+      <div className={cx('container')}>
+        {tokens.map((token, index) => (
+          <div
+            key={index}
+            className={cx('element')}
+            onMouseOver={() => setHoverIndex(index)}
+            onMouseOut={() => index === hoverIndex && setHoverIndex(-1)}
+          >
+            {token.content}
+            <span className={cx('tooltip', { isActive: index === hoverIndex })}>
+              {token.type}
+            </span>
+          </div>
+        ))}
+      </div>
 
       <h2>Parsed Expression</h2>
       {expression && renderToText(expression)}
@@ -41,10 +57,10 @@ export default function ParserTest() {
       <h2>Tree</h2>
       {expression && <ExprDom expr={expression} />}
 
-      <h2>Parwse Warning</h2>
+      <h2>Parser Warning</h2>
       {warning}
 
-      <h3>Parse Error</h3>
+      <h2>Parse Error</h2>
       {error}
     </>
   )

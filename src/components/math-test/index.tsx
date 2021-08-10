@@ -13,6 +13,10 @@ const TAB_ENTRIES = [
     label: 'Parser',
     value: MathTestTab.PARSER,
   },
+  {
+    label: 'Equivalence Test',
+    value: MathTestTab.EQUIVALENCE_TEST,
+  },
 ]
 
 export default function MathTest() {
@@ -20,6 +24,7 @@ export default function MathTest() {
 
   return (
     <>
+      <h1>Math Package</h1>
       <Tab<MathTestTab> entries={TAB_ENTRIES} onChange={setCurrentTab} />
 
       {currentTab === MathTestTab.PARSER && <ParserTest />}

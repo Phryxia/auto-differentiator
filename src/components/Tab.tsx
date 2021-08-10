@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import classNames from 'classnames'
-import styles from '../styles/tab.module.css'
+import classNames from 'classnames/bind'
+import defaultStyles from '../styles/tab.module.css'
 
-const cx = classNames.bind(styles)
+let cx: any
 
 interface TabProps<T> {
   entries: {
@@ -11,13 +11,17 @@ interface TabProps<T> {
   }[]
   defaultValue?: T
   onChange: (value: T) => void
+  styles?: { [key: string]: string }
 }
 
 export default function Tab<T = string>({
   entries,
   defaultValue,
   onChange,
+  styles = defaultStyles,
 }: TabProps<T>) {
+  cx = classNames.bind(styles)
+
   const [selectedValue, setSelectedValue] = useState<T>(
     defaultValue ?? entries[0].value
   )
@@ -30,6 +34,7 @@ export default function Tab<T = string>({
     <div className={cx('container')}>
       {entries.map(({ label, value }) => (
         <button
+          key={label}
           className={cx('entry', { selected: value === selectedValue })}
           onClick={() => setSelectedValue(value)}
         >

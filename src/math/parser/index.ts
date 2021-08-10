@@ -25,7 +25,7 @@ import {
   Tanh,
 } from '../nodes'
 
-enum TokenType {
+export enum TokenType {
   NUMBER = 'number',
   IDENTIFIER = 'identifier',
   OP_ADD = '+',

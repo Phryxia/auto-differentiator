@@ -36,6 +36,7 @@ export default function EquivalenceTest() {
       <TextInput onChange={handleChangeB} />
       {exprB && <ExprDom expr={exprB} />}
 
+      <h2>Result</h2>
       {exprA && exprB && exprA.isEquivalent(exprB)
         ? 'EQUIVALENT'
         : 'NOT EQUIVALENT'}

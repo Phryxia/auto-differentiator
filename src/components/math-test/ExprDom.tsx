@@ -11,8 +11,8 @@ import {
   Log,
   Power,
 } from '../../math/nodes'
-import styles from '../../styles/token.module.css'
-import classNames from 'classnames'
+import styles from '../../styles/tree.module.css'
+import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 
