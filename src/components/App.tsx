@@ -2,14 +2,16 @@ import classNames from 'classnames/bind'
 import styles from '../styles/app.module.css'
 import tabStyles from '../styles/app-tab.module.css'
 import MathTest from './math-test'
-import { useState } from 'react'
 import Tab from './Tab'
+import useQuery from '../hooks/useQuery'
+import * as qs from 'query-string'
+import { useEffect } from 'react'
 
 const cx = classNames.bind(styles)
 
 enum PageTab {
-  MATH,
-  BOOLEAN_ALGEBRA,
+  MATH = 'math',
+  BOOLEAN_ALGEBRA = 'boolean',
 }
 
 const TAB_ENTRIES = [
@@ -23,8 +25,27 @@ const TAB_ENTRIES = [
   },
 ]
 
+function extractPage(queries: qs.ParsedQuery): PageTab {
+  switch (queries.page) {
+    case PageTab.MATH:
+    case PageTab.BOOLEAN_ALGEBRA:
+      return queries.page
+    default:
+      return PageTab.MATH
+  }
+}
+
 function App() {
-  const [page, setPage] = useState<PageTab>(PageTab.MATH)
+  const { setQuery, queries } = useQuery()
+  const page = extractPage(queries)
+
+  function handleTabChange(page: PageTab) {
+    setQuery('page', page)
+  }
+
+  useEffect(() => {
+    setQuery('page', page)
+  }, [])
 
   return (
     <>
@@ -34,8 +55,10 @@ function App() {
 
       <Tab<PageTab>
         entries={TAB_ENTRIES}
-        onChange={setPage}
+        onChange={handleTabChange}
         styles={tabStyles}
+        defaultValue={page}
+        value={page}
       />
 
       <div className={cx('content')}>
