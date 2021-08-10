@@ -1,4 +1,4 @@
-import { Expression } from './module/model'
+import { Expression } from '../model'
 import {
   Constant,
   NamedConstant,
@@ -23,7 +23,7 @@ import {
   Sech,
   Sinh,
   Tanh,
-} from './module/nodes'
+} from '../nodes'
 
 enum TokenType {
   NUMBER = 'number',

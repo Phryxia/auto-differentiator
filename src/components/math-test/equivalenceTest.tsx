@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import Parser from '../parser'
-import { Expression } from '../parser/module/model'
+import Parser from '../../math/parser'
+import { Expression } from '../../math/model'
 import ExprDom from './ExprDom'
-import TextInput from './TextInput'
+import TextInput from '../TextInput'
 
 const parser = new Parser()
 

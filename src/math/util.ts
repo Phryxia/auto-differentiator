@@ -1,9 +1,6 @@
 import { Expression, Binary, isBinary } from './model'
-import { Add, Sub } from './nodes/additive'
-import { Mul } from './nodes/multiplicative'
+import { Variable, Add, Sub, Mul, Log } from './nodes'
 import Constant, { CONSTANT_MINUS_ONE } from './nodes/constant'
-import Log from './nodes/log'
-import Variable from './nodes/variable'
 
 export function isConstantZero(expr: Expression): boolean {
   return expr instanceof Constant && expr.value === 0
