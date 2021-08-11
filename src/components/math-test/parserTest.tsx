@@ -58,10 +58,20 @@ export default function ParserTest() {
       {expression && <ExprDom expr={expression} />}
 
       <h2>Parser Warning</h2>
-      {warning}
+      <div
+        dangerouslySetInnerHTML={{
+          __html:
+            warning?.replaceAll(' ', '&nbsp').replaceAll('\n', '<br />') ?? '',
+        }}
+      />
 
       <h2>Parse Error</h2>
-      {error}
+      <div
+        dangerouslySetInnerHTML={{
+          __html:
+            error?.replaceAll(' ', '&nbsp').replaceAll('\n', '<br />') ?? '',
+        }}
+      />
     </>
   )
 }

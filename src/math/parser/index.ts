@@ -24,6 +24,7 @@ import {
   Sinh,
   Tanh,
 } from '../nodes'
+import { CONSTANT_ZERO } from '../nodes/constant'
 
 export enum TokenType {
   NUMBER = 'number',
@@ -37,6 +38,7 @@ export enum TokenType {
   PARENTHESIS_LEFT = '(',
   PARENTHESIS_RIGHT = ')',
   UNKNOWN = '?',
+  EOF = 'EOF',
 }
 
 export interface Token {
@@ -90,7 +92,7 @@ export default class Parser {
       return result
     }
 
-    let c = ' '
+    let c = getchar()
 
     function lex(): Token {
       let content = ''
@@ -161,68 +163,28 @@ export default class Parser {
       }
 
       // Operator
-      if (c === '+') {
+      if (c && '+-*/^'.includes(c)) {
         const position = ptr - 1
         content += c
+
+        let type: TokenType
+        if (c === '+') type = TokenType.OP_ADD
+        else if (c === '-') type = TokenType.OP_SUB
+        else if (c === '*') type = TokenType.OP_MUL
+        else if (c === '/') type = TokenType.OP_DIV
+        else type = TokenType.OP_EXP
+
         c = getchar()
 
         return {
           content,
-          type: TokenType.OP_ADD,
-          position,
-        }
-      }
-
-      if (c === '-') {
-        const position = ptr - 1
-        content += c
-        c = getchar()
-
-        return {
-          content,
-          type: TokenType.OP_SUB,
-          position,
-        }
-      }
-
-      if (c === '*') {
-        const position = ptr - 1
-        content += c
-        c = getchar()
-
-        return {
-          content,
-          type: TokenType.OP_MUL,
-          position,
-        }
-      }
-
-      if (c === '/') {
-        const position = ptr - 1
-        content += c
-        c = getchar()
-
-        return {
-          content,
-          type: TokenType.OP_DIV,
-          position,
-        }
-      }
-
-      if (c === '^') {
-        const position = ptr - 1
-        content += c
-        c = getchar()
-
-        return {
-          content,
-          type: TokenType.OP_EXP,
+          type,
           position,
         }
       }
 
       // 괄호
-      if (c === '(' || c === '[' || c === '{') {
+      if (c && '({['.includes(c)) {
         const position = ptr - 1
         content += c
         c = getchar()
@@ -234,7 +196,7 @@ export default class Parser {
         }
       }
 
-      if (c === ')' || c === ']' || c === '}') {
+      if (c && ')}]'.includes(c)) {
         const position = ptr - 1
         content += c
         c = getchar()
@@ -258,10 +220,14 @@ export default class Parser {
         }
       }
 
+      const dummy = c
+      const position = ptr - 1
+      c = getchar()
+
       return {
-        content: c,
-        type: TokenType.UNKNOWN,
-        position: ptr - 1,
+        content: dummy,
+        type: !dummy ? TokenType.EOF : TokenType.UNKNOWN,
+        position,
       }
     }
 
@@ -269,13 +235,15 @@ export default class Parser {
     let token = lex()
     let warning = ''
 
-    while (token.type !== TokenType.UNKNOWN) {
-      tokens.push(token)
+    while (token.type !== TokenType.EOF) {
+      if (token.type === TokenType.UNKNOWN) {
+        warning += `[MathParser.tokenize] Unknown character ${
+          token.content
+        } will be ignored.\n${str}\n${' '.repeat(token.position)}^\n\n`
+      } else {
+        tokens.push(token)
+      }
       token = lex()
-    }
-
-    if (ptr < str.length) {
-      warning = `Unexpected character ${str.charAt(ptr - 1)} has been found`
     }
 
     return {
@@ -283,8 +251,6 @@ export default class Parser {
       warning,
     }
   }
-
-  //parse(str: string): Expression {}
 
   parse(str: string): {
     expression?: Expression
@@ -298,7 +264,7 @@ export default class Parser {
     function getToken(): Token {
       const result = tokens[ptr] ?? {
         content: '',
-        type: TokenType.UNKNOWN,
+        type: TokenType.EOF,
         position: -1,
       }
       ptr = Math.min(ptr + 1, tokens.length)
@@ -306,6 +272,21 @@ export default class Parser {
     }
 
     let token = getToken()
+
+    function throwError(name: string, expected: string) {
+      if (token.type === TokenType.EOF) {
+        throw new Error(
+          `[${name}] Token ends unexpectedly, expected ${expected}\n${str}\n${' '.repeat(
+            str.length
+          )}^\n`
+        )
+      }
+      throw new Error(
+        `[${name}] Unexpected token '${token.content}'(type: ${
+          token.type
+        }), expected ${expected}\n${str}\n${' '.repeat(token.position)}^\n`
+      )
+    }
     /*
       Expr := Term | Expr '+' Term | Expr '-' Term
       Term := Expo | Term '*' Expo | Term '/' Expo
@@ -408,77 +389,49 @@ export default class Parser {
           if (functionName === 'log' && token.type === TokenType.UNDERBAR) {
             token = getToken()
 
-            const base = parseExpr()
+            const base = parseLeaf()
+            const expr = parseLeaf()
+            return new Log(expr, base)
+          }
 
-            if (token.type === TokenType.PARENTHESIS_LEFT) {
-              token = getToken()
+          const expr = parseLeaf()
 
-              const expr = parseExpr()
-
-              if (token.type === TokenType.PARENTHESIS_RIGHT) {
-                token = getToken()
-                return new Log(expr, base)
-              }
-              throw new Error(
-                `[Parser.parse] Invalid token ${token.content} (type: ${token.type}), expect )`
+          switch (functionName) {
+            case 'log':
+            case 'ln':
+              return new Ln(expr)
+            case 'sin':
+              return new Sin(expr)
+            case 'cos':
+              return new Cos(expr)
+            case 'tan':
+              return new Tan(expr)
+            case 'csc':
+              return new Csc(expr)
+            case 'sec':
+              return new Sec(expr)
+            case 'cot':
+              return new Cot(expr)
+            case 'sinh':
+              return new Sinh(expr)
+            case 'cosh':
+              return new Cosh(expr)
+            case 'tanh':
+              return new Tanh(expr)
+            case 'csch':
+              return new Csch(expr)
+            case 'sech':
+              return new Sech(expr)
+            case 'coth':
+              return new Coth(expr)
+            case 'sqrt':
+              return new Sqrt(expr)
+            default:
+              throwError(
+                'MathParser.parse',
+                'nothing (this is unrechable code)'
               )
-            }
-            throw new Error(
-              `[Parser.parse] Invalid token ${token.content} (type: ${token.type}), expect (`
-            )
           }
-
-          if (token.type === TokenType.PARENTHESIS_LEFT) {
-            token = getToken()
-
-            const expr = parseExpr()
-
-            if (token.type === TokenType.PARENTHESIS_RIGHT) {
-              token = getToken()
-
-              switch (functionName) {
-                case 'log':
-                case 'ln':
-                  return new Ln(expr)
-                case 'sin':
-                  return new Sin(expr)
-                case 'cos':
-                  return new Cos(expr)
-                case 'tan':
-                  return new Tan(expr)
-                case 'csc':
-                  return new Csc(expr)
-                case 'sec':
-                  return new Sec(expr)
-                case 'cot':
-                  return new Cot(expr)
-                case 'sinh':
-                  return new Sinh(expr)
-                case 'cosh':
-                  return new Cosh(expr)
-                case 'tanh':
-                  return new Tanh(expr)
-                case 'csch':
-                  return new Csch(expr)
-                case 'sech':
-                  return new Sech(expr)
-                case 'coth':
-                  return new Coth(expr)
-                case 'sqrt':
-                  return new Sqrt(expr)
-                default:
-                  throw new Error(
-                    `[Parser.parse] Invalid token ${token.content} (type: ${token.type}), expect function name`
-                  )
-              }
-            }
-            throw new Error(
-              `[Parser.parse] Invalid token ${token.content} (type: ${token.type}), expect )`
-            )
-          }
-          throw new Error(
-            `[Parser.parse] Invalid identifier ${functionName} which is reserved as function name`
-          )
         }
 
         // 예약된 상수
@@ -512,13 +465,12 @@ export default class Parser {
 
           return expr
         }
-        throw new Error(
-          `[Parser.parse] Invalid token ${token.content} (type: ${token.type}), expect )`
-        )
+        throwError('MathParser.parse', ')')
       }
-      throw new Error(
-        `[Parser.parse] Invalid token ${token.content} (type: ${token.type}), expect (`
-      )
+      throwError('MathParser.parse', 'identifier or (')
+
+      // Unrechable Code
+      return CONSTANT_ZERO
     }
 
     try {
