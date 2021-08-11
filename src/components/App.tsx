@@ -2,6 +2,7 @@ import classNames from 'classnames/bind'
 import styles from '../styles/app.module.css'
 import tabStyles from '../styles/app-tab.module.css'
 import MathTest from './math-test'
+import BooleanTest from './boolean-test'
 import Tab from './Tab'
 import useQuery from '../hooks/useQuery'
 import * as qs from 'query-string'
@@ -63,6 +64,7 @@ function App() {
 
       <div className={cx('content')}>
         {page === PageTab.MATH && <MathTest />}
+        {page === PageTab.BOOLEAN_ALGEBRA && <BooleanTest />}
       </div>
     </>
   )

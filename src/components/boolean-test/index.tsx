@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Tab from '../Tab'
+import ParserTest from './parserTest'
 
 enum BooleanTestTab {
   PARSER,
@@ -24,10 +25,10 @@ export default function BooleanTest() {
 
   return (
     <>
-      <h2>Boolean Algebra Package</h2>
+      <h1>Boolean Algebra Package</h1>
       <Tab<BooleanTestTab> entries={TAB_ENTRIES} onChange={setCurrentTab} />
 
-      {/* {currentTab === BooleanTestTab.PARSER && <ParserTest />} */}
+      {currentTab === BooleanTestTab.PARSER && <ParserTest />}
       {/* {currentTab === BooleanTestTab.EQUIVALENCE_TEST && <EquivalenceTest />} */}
     </>
   )
