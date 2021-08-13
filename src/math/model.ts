@@ -2,37 +2,11 @@ export interface Variables {
   [name: string]: number
 }
 
-export type NodeType =
-  | 'constant'
-  | 'named constant'
-  | 'variable'
-  | '+'
-  | '-'
-  | '*'
-  | '/'
-  | '^'
-  | 'ln'
-  | 'log'
-  | 'sin'
-  | 'cos'
-  | 'tan'
-  | 'csc'
-  | 'sec'
-  | 'cot'
-  | 'sinh'
-  | 'cosh'
-  | 'tanh'
-  | 'csch'
-  | 'sech'
-  | 'coth'
-
 export interface Expression {
-  type: NodeType
   evaluate: (variables: Variables) => number
   differentiate: (variableName: string) => Expression
   optimize: (option?: Partial<OptimizerOption>) => Expression
   isEquivalent: (expression: Expression) => boolean
-  isOptimized?: boolean
 }
 
 export interface OptimizerOption {

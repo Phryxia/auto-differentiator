@@ -1,7 +1,6 @@
 import {
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
-  NodeType,
   OptimizerOption,
   Variables,
 } from '../model'
@@ -14,8 +13,6 @@ import NamedConstant from './namedConstant'
 import Power from './power'
 
 export default class Log implements Expression {
-  public readonly type: NodeType = 'log'
-
   constructor(public expr: Expression, public base: Expression) {}
 
   evaluate(variables: Variables): number {

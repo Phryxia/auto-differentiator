@@ -10,6 +10,7 @@ import {
   Ln,
   Log,
   Power,
+  Sqrt,
   Cosh,
   Coth,
   Csch,
@@ -92,6 +93,8 @@ export default function renderToText(expr: Expression): string {
   if (expr instanceof Sech) return `sech(${renderToText(expr.expr)})`
 
   if (expr instanceof Coth) return `coth(${renderToText(expr.expr)})`
+
+  if (expr instanceof Sqrt) return `sqrt(${renderToText(expr.expr)})`
 
   return '?'
 }

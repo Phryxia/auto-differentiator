@@ -2,7 +2,6 @@ import {
   Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
-  NodeType,
   OptimizerOption,
   Variables,
 } from '../../model'
@@ -14,8 +13,6 @@ import Power from '../power'
 import { optimizeMulDiv, isEquivalentMulDiv } from './common'
 
 export default class Div implements Expression, Binary {
-  public readonly type: NodeType = '/'
-
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {

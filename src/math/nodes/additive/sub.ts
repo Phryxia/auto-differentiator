@@ -2,7 +2,6 @@ import {
   Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
-  NodeType,
   OptimizerOption,
   Variables,
 } from '../../model'
@@ -12,8 +11,6 @@ import { Mul } from '../multiplicative'
 import { optimizeAddSub, isEquivalentAddSub } from './common'
 
 export default class Sub implements Expression, Binary {
-  public readonly type: NodeType = '-'
-
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
