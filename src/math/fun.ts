@@ -17,7 +17,6 @@ import {
   Sech,
   Sin,
   Sinh,
-  Sqrt,
   Sub,
   Tan,
   Tanh,
@@ -39,7 +38,7 @@ export function createRandomExpression(depthLimit: number): Expression {
     return new Constant(Math.floor(Math.random() * 128))
   }
 
-  const diff = 1 / 23
+  const diff = 1 / 22
   let threshold = diff
   if (seed < threshold) {
     return new Variable(createRandomVariableName())
@@ -96,11 +95,6 @@ export function createRandomExpression(depthLimit: number): Expression {
       createRandomExpression(depthLimit - 1),
       createRandomExpression(depthLimit - 1)
     )
-  }
-  threshold += diff
-
-  if (seed < threshold) {
-    return new Sqrt(createRandomExpression(depthLimit - 1))
   }
   threshold += diff
 

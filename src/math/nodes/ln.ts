@@ -1,6 +1,7 @@
 import {
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../model'
@@ -9,6 +10,8 @@ import Constant, { CONSTANT_ONE } from './constant'
 import NamedConstant from './namedConstant'
 
 export default class Ln implements Expression {
+  public readonly type: NodeType = 'ln'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {

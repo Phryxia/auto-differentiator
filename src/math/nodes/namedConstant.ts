@@ -1,6 +1,7 @@
 import {
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../model'
@@ -21,6 +22,8 @@ import { CONSTANT_ZERO } from './constant'
   NamedConstant가 점유하는 값은 외부 변수로도 사용 불가능하다.
 */
 export default class NamedConstant implements Expression {
+  public readonly type: NodeType = 'named constant'
+
   constructor(public readonly name: string, public readonly value: number) {}
 
   evaluate(variables: Variables) {

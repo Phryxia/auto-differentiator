@@ -1,6 +1,7 @@
 import {
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../model'
@@ -9,6 +10,8 @@ import { Mul } from './multiplicative'
 import Power from './power'
 
 export class Sinh implements Expression {
+  public readonly type: NodeType = 'sinh'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -37,6 +40,8 @@ export class Sinh implements Expression {
 }
 
 export class Cosh implements Expression {
+  public readonly type: NodeType = 'cosh'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -65,6 +70,8 @@ export class Cosh implements Expression {
 }
 
 export class Tanh implements Expression {
+  public readonly type: NodeType = 'tanh'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -96,6 +103,8 @@ export class Tanh implements Expression {
 }
 
 export class Csch implements Expression {
+  public readonly type: NodeType = 'csch'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -130,6 +139,8 @@ export class Csch implements Expression {
 }
 
 export class Sech implements Expression {
+  public readonly type: NodeType = 'sech'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -164,6 +175,8 @@ export class Sech implements Expression {
 }
 
 export class Coth implements Expression {
+  public readonly type: NodeType = 'coth'
+
   constructor(public expr: Expression) {}
 
   evaluate(variables: Variables): number {

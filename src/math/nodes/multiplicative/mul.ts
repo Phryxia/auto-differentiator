@@ -3,6 +3,7 @@ import {
   Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../../model'
@@ -11,6 +12,8 @@ import { isConstantOne, isConstantZero } from '../../util'
 import { optimizeMulDiv, isEquivalentMulDiv } from './common'
 
 export default class Mul implements Expression, Binary {
+  public readonly type: NodeType = '*'
+
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {

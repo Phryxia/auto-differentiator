@@ -2,6 +2,7 @@ import {
   Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../../model'
@@ -10,6 +11,8 @@ import { isConstantZero } from '../../util'
 import { optimizeAddSub, isEquivalentAddSub } from './common'
 
 export default class Add implements Expression, Binary {
+  public readonly type: NodeType = '+'
+
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {

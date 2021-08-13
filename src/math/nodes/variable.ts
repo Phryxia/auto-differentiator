@@ -1,12 +1,15 @@
 import {
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../model'
 import { CONSTANT_ONE, CONSTANT_ZERO } from './constant'
 
 export default class Variable implements Expression {
+  public readonly type: NodeType = 'variable'
+
   constructor(public readonly name: string) {}
 
   evaluate(variables: Variables) {

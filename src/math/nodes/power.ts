@@ -2,6 +2,7 @@ import {
   Binary,
   DEFAULT_OPTIMIZER_OPTION,
   Expression,
+  NodeType,
   OptimizerOption,
   Variables,
 } from '../model'
@@ -13,6 +14,8 @@ import { isConstantOne, isConstantZero } from '../util'
 import NamedConstant from './namedConstant'
 
 export default class Power implements Expression, Binary {
+  public readonly type: NodeType = '^'
+
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
