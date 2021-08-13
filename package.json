@@ -14,10 +14,13 @@
   },
   "devDependencies": {
     "@types/babel__core": "^7.1.15",
+    "@types/jest": "^26.0.24",
     "css-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.0.6",
     "prettier": "2.3.2",
     "style-loader": "^3.2.1",
+    "ts-jest": "^27.0.4",
     "ts-loader": "^9.2.5",
     "typescript": "^4.3.5",
     "webpack": "^5.49.0",
@@ -26,7 +29,8 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start": "webpack serve"
+    "start": "webpack serve",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
