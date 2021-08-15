@@ -58,7 +58,7 @@ export default function renderToText(expr: Expression): string {
       renderToText(expr.expr0),
       isAdditive(expr.expr0)
     )} / ${wrapParenthesis(
-      renderToText(expr.expr0),
+      renderToText(expr.expr1),
       !(expr.expr1 instanceof Power) && isBinary(expr.expr1)
     )}`
   }

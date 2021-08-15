@@ -103,7 +103,7 @@ describe('renderText:additive & multiplicative', () => {
   })
 
   test('x / (x - x)', () => {
-    const expr = new Div(x, new Add(x, x))
+    const expr = new Div(x, new Sub(x, x))
     expect(renderToText(expr).replaceAll(' ', '')).toBe('x/(x-x)')
   })
 
