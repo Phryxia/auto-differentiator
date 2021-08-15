@@ -7,7 +7,6 @@ import {
   Sub,
   Mul,
   Div,
-  Ln,
   Log,
   Power,
   Cos,
@@ -398,7 +397,7 @@ export default class Parser {
           switch (functionName) {
             case 'log':
             case 'ln':
-              return new Ln(expr)
+              return new Log(expr, NamedConstant.E)
             case 'sin':
               return new Sin(expr)
             case 'cos':
@@ -440,9 +439,9 @@ export default class Parser {
 
           switch (constantName) {
             case 'e':
-              return new NamedConstant(constantName, Math.E)
+              return NamedConstant.E
             case 'pi':
-              return new NamedConstant(constantName, Math.PI)
+              return NamedConstant.PI
           }
         }
 

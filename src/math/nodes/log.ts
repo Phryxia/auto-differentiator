@@ -6,7 +6,6 @@ import {
 } from '../model'
 import { Sub } from './additive'
 import { Mul, Div } from './multiplicative'
-import Ln from './ln'
 import { isConstantOne } from '../util'
 import Constant, { CONSTANT_ZERO } from './constant'
 import NamedConstant from './namedConstant'
@@ -16,6 +15,9 @@ export default class Log implements Expression {
   constructor(public expr: Expression, public base: Expression) {}
 
   evaluate(variables: Variables): number {
+    if (this.base === NamedConstant.E)
+      return Math.log(this.expr.evaluate(variables))
+
     return (
       Math.log(this.expr.evaluate(variables)) /
       Math.log(this.base.evaluate(variables))
@@ -23,14 +25,21 @@ export default class Log implements Expression {
   }
 
   differentiate(variableName: string): Expression {
-    const lnBase = new Ln(this.base)
+    if (this.base === NamedConstant.E) {
+      return new Div(this.expr.differentiate(variableName), this.expr)
+    }
+
+    const lnBase = new Log(this.base, NamedConstant.E)
     return new Div(
       new Sub(
         new Mul(
           new Div(this.expr.differentiate(variableName), this.expr),
           lnBase
         ),
-        new Mul(new Ln(this.expr), lnBase.differentiate(variableName))
+        new Mul(
+          new Log(this.expr, NamedConstant.E),
+          lnBase.differentiate(variableName)
+        )
       ),
       new Power(lnBase, new Constant(2))
     )
@@ -46,9 +55,6 @@ export default class Log implements Expression {
 
     if (base instanceof Constant && expr instanceof Constant)
       return new Constant(Math.log(expr.value) / Math.log(base.value))
-
-    if (base instanceof NamedConstant && base.name === 'e')
-      return new Ln(expr).optimize(option)
 
     if (isConstantOne(expr)) return CONSTANT_ZERO
 

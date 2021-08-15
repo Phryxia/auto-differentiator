@@ -8,7 +8,6 @@ import {
   Csc,
   Csch,
   Div,
-  Ln,
   Log,
   Mul,
   NamedConstant,
@@ -159,12 +158,12 @@ export function createRandomExpression(depthLimit: number): Expression {
   threshold += diff
 
   if (seed < threshold) {
-    return new Ln(createRandomExpression(depthLimit - 1))
+    return new Log(createRandomExpression(depthLimit - 1), NamedConstant.E)
   }
   threshold += diff
 
   if (seed < threshold) {
-    return new NamedConstant('e', Math.E)
+    return NamedConstant.E
   }
   threshold += diff
 

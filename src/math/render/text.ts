@@ -7,7 +7,6 @@ import {
   Constant,
   NamedConstant,
   Variable,
-  Ln,
   Log,
   Power,
   Cosh,
@@ -64,10 +63,10 @@ export default function renderToText(expr: Expression): string {
   if (expr instanceof Power)
     return `${wrapIfBinary(expr.expr0)}^${wrapIfBinary(expr.expr1)}`
 
-  if (expr instanceof Ln) return `ln(${renderToText(expr.expr)})`
-
-  if (expr instanceof Log)
+  if (expr instanceof Log) {
+    if (expr.base === NamedConstant.E) return `ln(${renderToText(expr.expr)})`
     return `log_{${renderToText(expr.base)}}(${renderToText(expr.expr)})`
+  }
 
   if (expr instanceof Sin) return `sin(${renderToText(expr.expr)})`
 

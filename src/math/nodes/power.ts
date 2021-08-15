@@ -7,12 +7,13 @@ import {
 } from '../model'
 import { Add } from './additive'
 import { Mul, Div } from './multiplicative'
-import Ln from './ln'
 import Constant, { CONSTANT_ONE } from './constant'
 import { isConstantOne, isConstantZero } from '../util'
 import NamedConstant from './namedConstant'
+import Log from './log'
 
 export default class Power implements Expression, Binary {
+  // expr0: base, expr1: exponent
   constructor(public expr0: Expression, public expr1: Expression) {}
 
   evaluate(variables: Variables): number {
@@ -23,10 +24,15 @@ export default class Power implements Expression, Binary {
   }
 
   differentiate(variableName: string): Expression {
+    if (this.expr0 === NamedConstant.E) return this
+
     return new Mul(
       this,
       new Add(
-        new Mul(this.expr1.differentiate(variableName), new Ln(this.expr0)),
+        new Mul(
+          this.expr1.differentiate(variableName),
+          new Log(this.expr0, NamedConstant.E)
+        ),
         new Mul(
           this.expr1,
           new Div(this.expr0.differentiate(variableName), this.expr0)
@@ -62,9 +68,9 @@ export default class Power implements Expression, Binary {
 
     // e^ln(x) => x
     if (
-      base instanceof NamedConstant &&
-      base.name === 'e' &&
-      exponent instanceof Ln
+      base === NamedConstant.E &&
+      exponent instanceof Log &&
+      exponent.base === NamedConstant.E
     )
       return exponent.expr
 

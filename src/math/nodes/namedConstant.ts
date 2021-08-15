@@ -42,4 +42,7 @@ export default class NamedConstant implements Expression {
   isEquivalent(expression: Expression): boolean {
     return expression instanceof NamedConstant && this.name === expression.name
   }
+
+  public static readonly E = new NamedConstant('e', Math.E)
+  public static readonly PI = new NamedConstant('pi', Math.PI)
 }
