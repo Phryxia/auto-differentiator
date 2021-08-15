@@ -1,10 +1,10 @@
 import { Binary, Expression, OptimizerOption, Variables } from '../../model'
-import Mul from './mul'
+import { isConstantMinusOne, isConstantOne, isConstantZero } from '../../util'
 import { Sub } from '../additive'
 import Constant, { CONSTANT_MINUS_ONE, CONSTANT_ZERO } from '../constant'
-import { isConstantMinusOne, isConstantOne, isConstantZero } from '../../util'
 import Power from '../power'
-import { optimizeMulDiv, isEquivalentMulDiv } from './common'
+import { isEquivalentMulDiv, optimizeMulDiv } from './common'
+import Mul from './mul'
 
 export default class Div extends Expression implements Binary {
   constructor(

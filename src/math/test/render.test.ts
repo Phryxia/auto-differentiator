@@ -3,10 +3,10 @@ import {
   Constant,
   Div,
   Mul,
-  Sub,
-  Variable,
   NamedConstant,
   Power,
+  Sub,
+  Variable,
 } from '../nodes'
 import { renderToText } from '../render'
 

@@ -1,10 +1,10 @@
 import { Bucket, Expression } from '../../model'
-import Div from './div'
-import Mul from './mul'
-import transformToExponent, { Exponent } from './exponent'
-import Constant, { CONSTANT_ONE } from '../constant'
 import { joinAdd } from '../../util'
+import Constant, { CONSTANT_ONE } from '../constant'
 import Power from '../power'
+import Div from './div'
+import transformToExponent, { Exponent } from './exponent'
+import Mul from './mul'
 
 function collectMultiplyingChilds(
   root: Mul | Div,

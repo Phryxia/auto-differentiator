@@ -1,12 +1,12 @@
 import classNames from 'classnames/bind'
-import styles from '../styles/app.module.css'
-import tabStyles from '../styles/app-tab.module.css'
-import MathTest from './math-test'
-import BooleanTest from './boolean-test'
-import Tab from './Tab'
-import useQuery from '../hooks/useQuery'
 import * as qs from 'query-string'
 import { useEffect } from 'react'
+import useQuery from '../hooks/useQuery'
+import tabStyles from '../styles/app-tab.module.css'
+import styles from '../styles/app.module.css'
+import BooleanTest from './boolean-test'
+import MathTest from './math-test'
+import Tab from './Tab'
 
 const cx = classNames.bind(styles)
 

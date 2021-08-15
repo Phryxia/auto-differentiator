@@ -1,7 +1,7 @@
 import { Binary, Expression, OptimizerOption, Variables } from '../../model'
-import Constant from '../constant'
 import { isConstantZero } from '../../util'
-import { optimizeAddSub, isEquivalentAddSub } from './common'
+import Constant from '../constant'
+import { isEquivalentAddSub, optimizeAddSub } from './common'
 
 export default class Add extends Expression implements Binary {
   constructor(

@@ -1,6 +1,6 @@
+import { Div, Mul } from '.'
 import { Expression } from '../../model'
 import { CONSTANT_MINUS_ONE, CONSTANT_ONE } from '../constant'
-import { Mul, Div } from '.'
 import Power from '../power'
 
 export interface Exponent {

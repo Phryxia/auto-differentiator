@@ -1,8 +1,8 @@
-import { Add } from '../additive'
 import { Binary, Expression, OptimizerOption, Variables } from '../../model'
-import Constant, { CONSTANT_ZERO } from '../constant'
 import { isConstantOne, isConstantZero } from '../../util'
-import { optimizeMulDiv, isEquivalentMulDiv } from './common'
+import { Add } from '../additive'
+import Constant, { CONSTANT_ZERO } from '../constant'
+import { isEquivalentMulDiv, optimizeMulDiv } from './common'
 
 export default class Mul extends Expression implements Binary {
   constructor(

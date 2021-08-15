@@ -1,4 +1,4 @@
-import { Constant, Add } from '../../nodes'
+import { Add, Constant } from '../../nodes'
 
 describe('nodes.Add', () => {
   const a = new Constant(3)

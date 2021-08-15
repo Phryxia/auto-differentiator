@@ -1,11 +1,11 @@
+import classNames from 'classnames/bind'
 import { useState } from 'react'
 import { BooleanExpression } from '../../boolean-algebra/model'
 import { BooleanParser, Token } from '../../boolean-algebra/parser'
 import { renderToText } from '../../boolean-algebra/render'
-import ExprDom from './ExprDom'
-import TextInput from '../TextInput'
-import classNames from 'classnames/bind'
 import tokenStyles from '../../styles/token/token.module.css'
+import TextInput from '../TextInput'
+import ExprDom from './ExprDom'
 
 const cx = classNames.bind(tokenStyles)
 

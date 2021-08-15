@@ -1,18 +1,18 @@
+import classNames from 'classnames/bind'
 import { ReactNode } from 'react'
 import { Expression, isBinary } from '../../math/model'
 import {
-  Constant,
-  NamedConstant,
-  Variable,
   Add,
-  Sub,
-  Mul,
+  Constant,
   Div,
   Log,
+  Mul,
+  NamedConstant,
   Power,
+  Sub,
+  Variable,
 } from '../../math/nodes'
 import styles from '../../styles/tree.module.css'
-import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 

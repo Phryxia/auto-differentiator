@@ -1,8 +1,8 @@
 import { Expression, OptimizerOption, Variables } from '../model'
-import { Sub } from './additive'
-import { Mul, Div } from './multiplicative'
 import { isConstantOne } from '../util'
+import { Sub } from './additive'
 import Constant, { CONSTANT_ZERO } from './constant'
+import { Div, Mul } from './multiplicative'
 import NamedConstant from './namedConstant'
 import Power from './power'
 

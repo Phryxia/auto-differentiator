@@ -1,9 +1,9 @@
 import { Bucket, Expression } from '../../model'
+import Constant, { CONSTANT_ZERO } from '../constant'
+import { Div, Mul } from '../multiplicative'
 import Add from './add'
 import Sub from './sub'
-import { Div, Mul } from '../multiplicative'
 import transformToTerms, { Term } from './term'
-import Constant, { CONSTANT_ZERO } from '../constant'
 
 export function optimizeAddSub(node: Add | Sub): Expression {
   // 트리를 항으로 변환

@@ -1,7 +1,7 @@
-import { Expression } from '../../model'
 import { Add, Sub } from '.'
-import { Mul, Div } from '../multiplicative'
+import { Expression } from '../../model'
 import Constant, { CONSTANT_ONE } from '../constant'
+import { Div, Mul } from '../multiplicative'
 
 export interface Term {
   coefficient: number

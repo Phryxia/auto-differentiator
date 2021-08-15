@@ -1,7 +1,6 @@
+import classNames from 'classnames/bind'
 import { ReactNode } from 'react'
 import { BooleanExpression } from '../../boolean-algebra/model'
-import styles from '../../styles/tree.module.css'
-import classNames from 'classnames/bind'
 import {
   And,
   BooleanConstant,
@@ -9,6 +8,7 @@ import {
   Not,
   Or,
 } from '../../boolean-algebra/nodes'
+import styles from '../../styles/tree.module.css'
 
 const cx = classNames.bind(styles)
 

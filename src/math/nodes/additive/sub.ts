@@ -2,7 +2,7 @@ import { Binary, Expression, OptimizerOption, Variables } from '../../model'
 import { isConstantZero } from '../../util'
 import Constant, { CONSTANT_MINUS_ONE } from '../constant'
 import { Mul } from '../multiplicative'
-import { optimizeAddSub, isEquivalentAddSub } from './common'
+import { isEquivalentAddSub, optimizeAddSub } from './common'
 
 export default class Sub extends Expression implements Binary {
   constructor(

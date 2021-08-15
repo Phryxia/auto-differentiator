@@ -1,11 +1,11 @@
+import classNames from 'classnames/bind'
 import { useState } from 'react'
 import { Expression } from '../../math/model'
 import Parser, { Token } from '../../math/parser'
 import { renderToText } from '../../math/render'
-import ExprDom from './ExprDom'
-import TextInput from '../TextInput'
-import classNames from 'classnames/bind'
 import tokenStyles from '../../styles/token/token.module.css'
+import TextInput from '../TextInput'
+import ExprDom from './ExprDom'
 
 const cx = classNames.bind(tokenStyles)
 
