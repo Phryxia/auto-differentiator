@@ -1,11 +1,24 @@
 import {
   Add,
   Constant,
+  Cos,
+  Cosh,
+  Cot,
+  Coth,
+  Csc,
+  Csch,
   Div,
+  Log,
   Mul,
   NamedConstant,
   Power,
+  Sec,
+  Sech,
+  Sin,
+  Sinh,
   Sub,
+  Tan,
+  Tanh,
   Variable,
 } from '../nodes'
 import { renderToText } from '../render'
@@ -69,9 +82,9 @@ describe('renderText:additive & multiplicative', () => {
     expect(renderToText(expr).replaceAll(' ', '')).toBe('(x+x)*x')
   })
 
-  test('x * (x + x)', () => {
-    const expr = new Mul(x, new Add(x, x))
-    expect(renderToText(expr).replaceAll(' ', '')).toBe('x*(x+x)')
+  test('x * (x - x)', () => {
+    const expr = new Mul(x, new Sub(x, x))
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('x*(x-x)')
   })
 
   test('x + x * x', () => {
@@ -89,9 +102,9 @@ describe('renderText:additive & multiplicative', () => {
     expect(renderToText(expr).replaceAll(' ', '')).toBe('(x+x)/x')
   })
 
-  test('x / (x + x)', () => {
+  test('x / (x - x)', () => {
     const expr = new Div(x, new Add(x, x))
-    expect(renderToText(expr).replaceAll(' ', '')).toBe('x/(x+x)')
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('x/(x-x)')
   })
 
   test('x + x / x', () => {
@@ -106,6 +119,11 @@ describe('renderText:additive & multiplicative', () => {
 })
 
 describe('renderText:exponential', () => {
+  test('x ^ x', () => {
+    const expr = new Power(x, x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('x^x')
+  })
+
   test('x ^ (x ^ x) ^ x', () => {
     const expr = new Power(x, new Power(new Power(x, x), x))
     expect(renderToText(expr).replaceAll(' ', '')).toBe('x^(x^x)^x')
@@ -116,10 +134,84 @@ describe('renderText:exponential', () => {
     expect(renderToText(expr).replaceAll(' ', '')).toBe('x^(x+x)')
   })
 
-  test('(x + x) ^ x', () => {
-    const expr = new Power(new Add(x, x), x)
-    expect(renderToText(expr).replaceAll(' ', '')).toBe('(x+x)^x')
+  test('(x - x) ^ x', () => {
+    const expr = new Power(new Sub(x, x), x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('(x-x)^x')
   })
 })
 
-// describe('')
+describe('renderText:log', () => {
+  test('log_{x}(x)', () => {
+    const expr = new Log(x, x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('log_{x}(x)')
+  })
+
+  test('ln(x)', () => {
+    const expr = new Log(x, NamedConstant.E)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('ln(x)')
+  })
+})
+
+describe('renderText:trigonometry', () => {
+  test('sin(x)', () => {
+    const expr = new Sin(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('sin(x)')
+  })
+
+  test('cos(x)', () => {
+    const expr = new Cos(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('cos(x)')
+  })
+
+  test('tan(x)', () => {
+    const expr = new Tan(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('tan(x)')
+  })
+
+  test('csc(x)', () => {
+    const expr = new Csc(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('csc(x)')
+  })
+
+  test('sec(x)', () => {
+    const expr = new Sec(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('sec(x)')
+  })
+
+  test('cot(x)', () => {
+    const expr = new Cot(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('cot(x)')
+  })
+})
+
+describe('renderText:hyper trigonometry', () => {
+  test('sinh(x)', () => {
+    const expr = new Sinh(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('sinh(x)')
+  })
+
+  test('cosh(x)', () => {
+    const expr = new Cosh(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('cosh(x)')
+  })
+
+  test('tanh(x)', () => {
+    const expr = new Tanh(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('tanh(x)')
+  })
+
+  test('csch(x)', () => {
+    const expr = new Csch(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('csch(x)')
+  })
+
+  test('sech(x)', () => {
+    const expr = new Sech(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('sech(x)')
+  })
+
+  test('coth(x)', () => {
+    const expr = new Coth(x)
+    expect(renderToText(expr).replaceAll(' ', '')).toBe('coth(x)')
+  })
+})
