@@ -466,16 +466,21 @@ export default class Parser {
 
       // 괄호
       if (token.type === TokenType.PARENTHESIS_LEFT) {
+        const expectedShape =
+          token.content === '(' ? ')' : token.content === '{' ? '}' : ']'
         token = getToken()
 
         const expr = parseExpr()
 
-        if (token.type === TokenType.PARENTHESIS_RIGHT) {
+        if (
+          token.type === TokenType.PARENTHESIS_RIGHT &&
+          token.content === expectedShape
+        ) {
           token = getToken()
 
           return expr
         }
-        throwError('MathParser.parse', ')')
+        throwError('MathParser.parse', expectedShape)
       }
       throwError('MathParser.parse', 'identifier or (')
 
