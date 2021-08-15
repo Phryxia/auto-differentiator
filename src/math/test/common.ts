@@ -11,7 +11,7 @@ export function isSameStructure(
   for (const prop in expectation) {
     if (prop === 'className') continue
 
-    if (prop.includes('expr')) {
+    if (prop.includes('expr') || prop === 'base') {
       if (
         !expr.hasOwnProperty(prop) ||
         !isSameStructure((expr as any)[prop], expectation[prop])
