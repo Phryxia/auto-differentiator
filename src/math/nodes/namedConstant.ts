@@ -1,9 +1,4 @@
-import {
-  DEFAULT_OPTIMIZER_OPTION,
-  Expression,
-  OptimizerOption,
-  Variables,
-} from '../model'
+import { Expression, OptimizerOption, Variables } from '../model'
 import { CONSTANT_ZERO } from './constant'
 
 /*
@@ -20,8 +15,10 @@ import { CONSTANT_ZERO } from './constant'
   NamedConstant는 변수가 아니기 때문에 미분하면 항상 0이다.
   NamedConstant가 점유하는 값은 외부 변수로도 사용 불가능하다.
 */
-export default class NamedConstant implements Expression {
-  constructor(public readonly name: string, public readonly value: number) {}
+export default class NamedConstant extends Expression {
+  constructor(public readonly name: string, public readonly value: number) {
+    super()
+  }
 
   evaluate(variables: Variables) {
     return this.value
@@ -31,16 +28,16 @@ export default class NamedConstant implements Expression {
     return CONSTANT_ZERO
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     return this
   }
 
   isEquivalent(expression: Expression): boolean {
     return expression instanceof NamedConstant && this.name === expression.name
+  }
+
+  isOptimized(): boolean {
+    return true
   }
 
   public static readonly E = new NamedConstant('e', Math.E)

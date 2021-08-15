@@ -1,10 +1,4 @@
-import {
-  Binary,
-  DEFAULT_OPTIMIZER_OPTION,
-  Expression,
-  OptimizerOption,
-  Variables,
-} from '../model'
+import { Binary, Expression, OptimizerOption, Variables } from '../model'
 import { Add } from './additive'
 import { Mul, Div } from './multiplicative'
 import Constant, { CONSTANT_ONE } from './constant'
@@ -12,12 +6,14 @@ import { isConstantOne, isConstantZero } from '../util'
 import NamedConstant from './namedConstant'
 import Log from './log'
 
-export default class Power implements Expression, Binary {
+export default class Power extends Expression implements Binary {
   // expr0: base, expr1: exponent
   constructor(
     public readonly expr0: Expression,
     public readonly expr1: Expression
-  ) {}
+  ) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return Math.pow(
@@ -44,11 +40,7 @@ export default class Power implements Expression, Binary {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const base = this.expr0.optimize(option)
     const exponent = this.expr1.optimize(option)
 

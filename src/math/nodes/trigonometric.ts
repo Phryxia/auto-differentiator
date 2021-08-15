@@ -1,15 +1,12 @@
-import {
-  DEFAULT_OPTIMIZER_OPTION,
-  Expression,
-  OptimizerOption,
-  Variables,
-} from '../model'
+import { Expression, OptimizerOption, Variables } from '../model'
 import Constant, { CONSTANT_MINUS_ONE } from './constant'
 import { Mul } from './multiplicative'
 import Power from './power'
 
-export class Sin implements Expression {
-  constructor(public readonly expr: Expression) {}
+export class Sin extends Expression {
+  constructor(public readonly expr: Expression) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return Math.sin(this.expr.evaluate(variables))
@@ -19,11 +16,7 @@ export class Sin implements Expression {
     return new Mul(this.expr.differentiate(variableName), new Cos(this.expr))
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr = this.expr.optimize(option)
 
     if (expr instanceof Constant) return new Constant(Math.sin(expr.value))
@@ -36,8 +29,10 @@ export class Sin implements Expression {
   }
 }
 
-export class Cos implements Expression {
-  constructor(public readonly expr: Expression) {}
+export class Cos extends Expression {
+  constructor(public readonly expr: Expression) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return Math.cos(this.expr.evaluate(variables))
@@ -50,11 +45,7 @@ export class Cos implements Expression {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr = this.expr.optimize(option)
 
     if (expr instanceof Constant) return new Constant(Math.cos(expr.value))
@@ -67,8 +58,10 @@ export class Cos implements Expression {
   }
 }
 
-export class Tan implements Expression {
-  constructor(public readonly expr: Expression) {}
+export class Tan extends Expression {
+  constructor(public readonly expr: Expression) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return Math.tan(this.expr.evaluate(variables))
@@ -81,11 +74,7 @@ export class Tan implements Expression {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr = this.expr.optimize(option)
 
     if (expr instanceof Constant) return new Constant(Math.tan(expr.value))
@@ -98,8 +87,10 @@ export class Tan implements Expression {
   }
 }
 
-export class Csc implements Expression {
-  constructor(public readonly expr: Expression) {}
+export class Csc extends Expression {
+  constructor(public readonly expr: Expression) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return 1 / Math.sin(this.expr.evaluate(variables))
@@ -115,11 +106,7 @@ export class Csc implements Expression {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr = this.expr.optimize(option)
 
     if (expr instanceof Constant) return new Constant(1 / Math.sin(expr.value))
@@ -132,8 +119,10 @@ export class Csc implements Expression {
   }
 }
 
-export class Sec implements Expression {
-  constructor(public readonly expr: Expression) {}
+export class Sec extends Expression {
+  constructor(public readonly expr: Expression) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return 1 / Math.cos(this.expr.evaluate(variables))
@@ -146,11 +135,7 @@ export class Sec implements Expression {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr = this.expr.optimize(option)
 
     if (expr instanceof Constant) return new Constant(1 / Math.cos(expr.value))
@@ -163,8 +148,10 @@ export class Sec implements Expression {
   }
 }
 
-export class Cot implements Expression {
-  constructor(public readonly expr: Expression) {}
+export class Cot extends Expression {
+  constructor(public readonly expr: Expression) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return 1 / Math.tan(this.expr.evaluate(variables))
@@ -180,11 +167,7 @@ export class Cot implements Expression {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr = this.expr.optimize(option)
 
     if (expr instanceof Constant) return new Constant(1 / Math.tan(expr.value))

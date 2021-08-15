@@ -1,9 +1,4 @@
-import {
-  DEFAULT_OPTIMIZER_OPTION,
-  Expression,
-  OptimizerOption,
-  Variables,
-} from '../model'
+import { Expression, OptimizerOption, Variables } from '../model'
 import { Sub } from './additive'
 import { Mul, Div } from './multiplicative'
 import { isConstantOne } from '../util'
@@ -11,11 +6,13 @@ import Constant, { CONSTANT_ZERO } from './constant'
 import NamedConstant from './namedConstant'
 import Power from './power'
 
-export default class Log implements Expression {
+export default class Log extends Expression {
   constructor(
     public readonly expr: Expression,
     public readonly base: Expression
-  ) {}
+  ) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     if (this.base === NamedConstant.E)
@@ -48,11 +45,7 @@ export default class Log implements Expression {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const base = this.base.optimize(option)
     const expr = this.expr.optimize(option)
 

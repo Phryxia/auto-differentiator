@@ -1,19 +1,15 @@
-import {
-  Binary,
-  DEFAULT_OPTIMIZER_OPTION,
-  Expression,
-  OptimizerOption,
-  Variables,
-} from '../../model'
+import { Binary, Expression, OptimizerOption, Variables } from '../../model'
 import Constant from '../constant'
 import { isConstantZero } from '../../util'
 import { optimizeAddSub, isEquivalentAddSub } from './common'
 
-export default class Add implements Expression, Binary {
+export default class Add extends Expression implements Binary {
   constructor(
     public readonly expr0: Expression,
     public readonly expr1: Expression
-  ) {}
+  ) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return this.expr0.evaluate(variables) + this.expr1.evaluate(variables)
@@ -26,11 +22,7 @@ export default class Add implements Expression, Binary {
     )
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     const expr0 = this.expr0.optimize(option)
     const expr1 = this.expr1.optimize(option)
 

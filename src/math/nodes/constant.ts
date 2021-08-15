@@ -1,12 +1,9 @@
-import {
-  DEFAULT_OPTIMIZER_OPTION,
-  Expression,
-  OptimizerOption,
-  Variables,
-} from '../model'
+import { Expression, OptimizerOption, Variables } from '../model'
 
-export default class Constant implements Expression {
-  constructor(public readonly value: number) {}
+export default class Constant extends Expression {
+  constructor(public readonly value: number) {
+    super()
+  }
 
   evaluate(variables: Variables): number {
     return this.value
@@ -16,16 +13,16 @@ export default class Constant implements Expression {
     return new Constant(0)
   }
 
-  optimize(
-    option: Partial<OptimizerOption> = DEFAULT_OPTIMIZER_OPTION
-  ): Expression {
-    option = { ...DEFAULT_OPTIMIZER_OPTION, ...option }
-
+  optimizeConcrete(option: OptimizerOption): Expression {
     return this
   }
 
   isEquivalent(expression: Expression): boolean {
     return expression instanceof Constant && this.value === expression.value
+  }
+
+  isOptimized(): boolean {
+    return true
   }
 }
 
