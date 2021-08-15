@@ -1,10 +1,10 @@
-import { Binary, Expression, OptimizerOption, Variables } from '../../model'
+import { Expression, OptimizerOption, Variables } from '../../model'
 import { isConstantZero } from '../../util'
 import Constant, { CONSTANT_MINUS_ONE } from '../constant'
 import { Mul } from '../multiplicative'
 import { isEquivalentAddSub, optimizeAddSub } from './common'
 
-export default class Sub extends Expression implements Binary {
+export default class Sub extends Expression {
   constructor(
     public readonly expr0: Expression,
     public readonly expr1: Expression

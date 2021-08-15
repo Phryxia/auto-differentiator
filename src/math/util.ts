@@ -1,5 +1,5 @@
-import { Binary, Expression, isBinary } from './model'
-import { Add, Log, Mul, Sub, Variable } from './nodes'
+import { Expression } from './model'
+import { Add, Div, Log, Mul, Power, Sub, Variable } from './nodes'
 import Constant, { CONSTANT_MINUS_ONE } from './nodes/constant'
 
 export function isConstantZero(expr: Expression): boolean {
@@ -15,17 +15,17 @@ export function isConstantMinusOne(expr: Expression): boolean {
 }
 
 export function isVariableUsed(
-  expr: Expression | Binary,
+  expr: Expression,
   variableName: string
 ): boolean {
   if (expr instanceof Variable) return expr.name === variableName
 
   const anyExpr: any = expr
 
-  if (isBinary(expr))
+  if (anyExpr.expr0 && anyExpr.expr1)
     return (
-      isVariableUsed(expr.expr0, variableName) ||
-      isVariableUsed(expr.expr1, variableName)
+      isVariableUsed(anyExpr.expr0, variableName) ||
+      isVariableUsed(anyExpr.expr1, variableName)
     )
 
   if (expr instanceof Log)
@@ -60,4 +60,16 @@ export function joinAdd(
   }
 
   return lvalue
+}
+
+export function isAdditive(expr: Expression): boolean {
+  return expr instanceof Add || expr instanceof Sub
+}
+
+export function isMultiplicative(expr: Expression): boolean {
+  return expr instanceof Mul || expr instanceof Div
+}
+
+export function isBinary(expr: Expression) {
+  return isAdditive(expr) || isMultiplicative(expr) || expr instanceof Power
 }

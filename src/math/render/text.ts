@@ -1,4 +1,4 @@
-import { Expression, isUnary } from '../model'
+import { Expression } from '../model'
 import {
   Add,
   Constant,
@@ -22,21 +22,10 @@ import {
   Tanh,
   Variable,
 } from '../nodes'
+import { isAdditive, isBinary } from '../util'
 
 function wrapParenthesis(str: string, isWrapped: boolean): string {
   return isWrapped ? `(${str})` : str
-}
-
-function wrapIfBinary(expr: Expression): string {
-  return wrapParenthesis(
-    renderToText(expr),
-    !(
-      isUnary(expr) ||
-      expr instanceof Constant ||
-      expr instanceof Variable ||
-      expr instanceof NamedConstant
-    )
-  )
 }
 
 export default function renderToText(expr: Expression): string {
@@ -52,16 +41,36 @@ export default function renderToText(expr: Expression): string {
     return `${renderToText(expr.expr0)} + ${renderToText(expr.expr1)}`
 
   if (expr instanceof Sub)
-    return `${renderToText(expr.expr0)} - ${wrapIfBinary(expr.expr1)}`
+    return `${renderToText(expr.expr0)} - ${wrapParenthesis(
+      renderToText(expr.expr1),
+      isAdditive(expr.expr1)
+    )}`
 
-  if (expr instanceof Mul)
-    return `${wrapIfBinary(expr.expr0)} * ${wrapIfBinary(expr.expr1)}`
+  if (expr instanceof Mul) {
+    return `${wrapParenthesis(
+      renderToText(expr.expr0),
+      isAdditive(expr.expr0)
+    )} * ${wrapParenthesis(renderToText(expr.expr1), isAdditive(expr.expr1))}`
+  }
 
-  if (expr instanceof Div)
-    return `${wrapIfBinary(expr.expr0)} / ${wrapIfBinary(expr.expr1)}`
+  if (expr instanceof Div) {
+    return `${wrapParenthesis(
+      renderToText(expr.expr0),
+      isAdditive(expr.expr0)
+    )} / ${wrapParenthesis(
+      renderToText(expr.expr0),
+      !(expr.expr1 instanceof Power) && isBinary(expr.expr1)
+    )}`
+  }
 
   if (expr instanceof Power)
-    return `${wrapIfBinary(expr.expr0)}^${wrapIfBinary(expr.expr1)}`
+    return `${wrapParenthesis(
+      renderToText(expr.expr0),
+      isBinary(expr.expr0)
+    )}^${wrapParenthesis(
+      renderToText(expr.expr1),
+      !(expr.expr1 instanceof Power) && isBinary(expr.expr1)
+    )}`
 
   if (expr instanceof Log) {
     if (expr.base === NamedConstant.E) return `ln(${renderToText(expr.expr)})`

@@ -1,4 +1,4 @@
-import { Binary, Expression, OptimizerOption, Variables } from '../model'
+import { Expression, OptimizerOption, Variables } from '../model'
 import { isConstantOne, isConstantZero } from '../util'
 import { Add } from './additive'
 import Constant, { CONSTANT_ONE } from './constant'
@@ -6,7 +6,7 @@ import Log from './log'
 import { Div, Mul } from './multiplicative'
 import NamedConstant from './namedConstant'
 
-export default class Power extends Expression implements Binary {
+export default class Power extends Expression {
   // expr0: base, expr1: exponent
   constructor(
     public readonly expr0: Expression,

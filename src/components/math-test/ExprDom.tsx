@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind'
 import { ReactNode } from 'react'
-import { Expression, isBinary } from '../../math/model'
+import { Expression } from '../../math/model'
 import {
   Add,
   Constant,
@@ -12,6 +12,7 @@ import {
   Sub,
   Variable,
 } from '../../math/nodes'
+import { isAdditive, isBinary } from '../../math/util'
 import styles from '../../styles/tree.module.css'
 
 const cx = classNames.bind(styles)
@@ -44,7 +45,7 @@ export default function ExprDom({ expr }: { expr: Expression }) {
     return (
       <span className={cx('token')}>
         <ExprDom expr={expr.expr0} /> -{' '}
-        <Wrap isWrapped={isBinary(expr.expr0)}>
+        <Wrap isWrapped={isAdditive(expr.expr0)}>
           <ExprDom expr={expr.expr1} />
         </Wrap>
       </span>
@@ -53,11 +54,11 @@ export default function ExprDom({ expr }: { expr: Expression }) {
   if (expr instanceof Mul)
     return (
       <span className={cx('token')}>
-        <Wrap isWrapped={isBinary(expr.expr0)}>
+        <Wrap isWrapped={isAdditive(expr.expr0)}>
           <ExprDom expr={expr.expr0} />
         </Wrap>{' '}
         *{' '}
-        <Wrap isWrapped={isBinary(expr.expr0)}>
+        <Wrap isWrapped={isAdditive(expr.expr0)}>
           <ExprDom expr={expr.expr1} />
         </Wrap>
       </span>
