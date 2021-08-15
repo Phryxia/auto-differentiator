@@ -74,6 +74,12 @@ describe('Parser.tokenize', () => {
       'dddd',
     ])
   })
+
+  test('.', () => {
+    const { tokens, warning } = parser.tokenize('.')
+    expect(tokens.length).toBe(0)
+    expect(warning).toBeTruthy()
+  })
 })
 
 describe('Parser.parse', () => {
@@ -84,7 +90,7 @@ describe('Parser.parse', () => {
   })
 
   test('72', () => {
-    const { expression } = parser.parse('babo')
+    const { expression } = parser.parse('72')
     expect(
       isSameStructure(expression, {
         className: 'Constant',

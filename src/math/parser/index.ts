@@ -100,14 +100,26 @@ export default class Parser {
       }
 
       // 숫자
-      if (isDigit(c)) {
+      if (isDigit(c) || c === '.') {
+        const noPreNumber = c === '.'
+        let noPostNumber: boolean = true
+
         const position = ptr - 1
         content += c
         c = getchar()
 
         while (isDigit(c)) {
+          noPostNumber = false
           content += c
           c = getchar()
+        }
+
+        if (noPreNumber && noPostNumber) {
+          return {
+            content,
+            type: TokenType.UNKNOWN,
+            position,
+          }
         }
 
         if (c === '.') {
