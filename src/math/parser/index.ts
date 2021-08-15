@@ -10,7 +10,6 @@ import {
   Ln,
   Log,
   Power,
-  Sqrt,
   Cos,
   Cot,
   Csc,
@@ -425,7 +424,7 @@ export default class Parser {
             case 'coth':
               return new Coth(expr)
             case 'sqrt':
-              return new Sqrt(expr)
+              return new Power(expr, new Constant(0.5))
             default:
               throwError(
                 'MathParser.parse',
