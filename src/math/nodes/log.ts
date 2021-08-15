@@ -12,7 +12,10 @@ import NamedConstant from './namedConstant'
 import Power from './power'
 
 export default class Log implements Expression {
-  constructor(public expr: Expression, public base: Expression) {}
+  constructor(
+    public readonly expr: Expression,
+    public readonly base: Expression
+  ) {}
 
   evaluate(variables: Variables): number {
     if (this.base === NamedConstant.E)

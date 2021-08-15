@@ -9,7 +9,7 @@ import { Mul } from './multiplicative'
 import Power from './power'
 
 export class Sin implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.sin(this.expr.evaluate(variables))
@@ -37,7 +37,7 @@ export class Sin implements Expression {
 }
 
 export class Cos implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.cos(this.expr.evaluate(variables))
@@ -68,7 +68,7 @@ export class Cos implements Expression {
 }
 
 export class Tan implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.tan(this.expr.evaluate(variables))
@@ -99,7 +99,7 @@ export class Tan implements Expression {
 }
 
 export class Csc implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return 1 / Math.sin(this.expr.evaluate(variables))
@@ -133,7 +133,7 @@ export class Csc implements Expression {
 }
 
 export class Sec implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return 1 / Math.cos(this.expr.evaluate(variables))
@@ -164,7 +164,7 @@ export class Sec implements Expression {
 }
 
 export class Cot implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return 1 / Math.tan(this.expr.evaluate(variables))

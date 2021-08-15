@@ -9,7 +9,7 @@ import { Mul } from './multiplicative'
 import Power from './power'
 
 export class Sinh implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.sinh(this.expr.evaluate(variables))
@@ -37,7 +37,7 @@ export class Sinh implements Expression {
 }
 
 export class Cosh implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.cosh(this.expr.evaluate(variables))
@@ -65,7 +65,7 @@ export class Cosh implements Expression {
 }
 
 export class Tanh implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return Math.tanh(this.expr.evaluate(variables))
@@ -96,7 +96,7 @@ export class Tanh implements Expression {
 }
 
 export class Csch implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return 1 / Math.sinh(this.expr.evaluate(variables))
@@ -130,7 +130,7 @@ export class Csch implements Expression {
 }
 
 export class Sech implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return 1 / Math.cosh(this.expr.evaluate(variables))
@@ -164,7 +164,7 @@ export class Sech implements Expression {
 }
 
 export class Coth implements Expression {
-  constructor(public expr: Expression) {}
+  constructor(public readonly expr: Expression) {}
 
   evaluate(variables: Variables): number {
     return 1 / Math.tanh(this.expr.evaluate(variables))

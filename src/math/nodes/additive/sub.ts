@@ -11,7 +11,10 @@ import { Mul } from '../multiplicative'
 import { optimizeAddSub, isEquivalentAddSub } from './common'
 
 export default class Sub implements Expression, Binary {
-  constructor(public expr0: Expression, public expr1: Expression) {}
+  constructor(
+    public readonly expr0: Expression,
+    public readonly expr1: Expression
+  ) {}
 
   evaluate(variables: Variables): number {
     return this.expr0.evaluate(variables) - this.expr1.evaluate(variables)

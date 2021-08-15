@@ -14,7 +14,10 @@ import Log from './log'
 
 export default class Power implements Expression, Binary {
   // expr0: base, expr1: exponent
-  constructor(public expr0: Expression, public expr1: Expression) {}
+  constructor(
+    public readonly expr0: Expression,
+    public readonly expr1: Expression
+  ) {}
 
   evaluate(variables: Variables): number {
     return Math.pow(
