@@ -1,5 +1,6 @@
 import Parser, { TokenType } from '../../math/parser'
-import { NamedConstant } from '../nodes'
+import { Expression } from '../model'
+import { Add, Constant, NamedConstant, Variable } from '../nodes'
 import { CONSTANT_ONE, CONSTANT_ZERO } from '../nodes/constant'
 import { isSameStructure } from './common'
 
@@ -330,5 +331,37 @@ describe('Parser.parse', () => {
   test('{1}', () => {
     const { expression } = parser.parse('{1}')
     expect(expression).toBe(CONSTANT_ONE)
+  })
+
+  test('minimal reference check', () => {
+    const pool: { [key: string]: Expression } = {}
+    const { expression } = parser.parse(
+      'x + 5 + x + pi + y + 5 + y + 10 + pi + 10'
+    )
+
+    function traverse(node: Expression): void {
+      if (node instanceof Add) {
+        traverse(node.expr0)
+        traverse(node.expr1)
+      } else {
+        // every constant, variable and named constant's reference should be same
+        // if they has same name (or value if it is constant)
+        if (node instanceof Variable || node instanceof NamedConstant) {
+          if (pool[node.name]) {
+            expect(pool[node.name]).toBe(node)
+          } else {
+            pool[node.name] = node
+          }
+        } else if (node instanceof Constant) {
+          if (pool[`${node.value}`]) {
+            expect(pool[`${node.value}`]).toBe(node)
+          } else {
+            pool[`${node.value}`] = node
+          }
+        }
+      }
+    }
+
+    expression && traverse(expression)
   })
 })
