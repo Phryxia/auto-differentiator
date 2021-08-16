@@ -316,6 +316,33 @@ describe('Parser.parse', () => {
     )
   })
 
+  test('-5 * sin(x + (-1))', () => {
+    const { expression } = parser.parse('-5 * sin(x + (-1))')
+    expect(
+      isSameStructure(expression, {
+        className: 'Mul',
+        expr0: {
+          className: 'Constant',
+          value: -5,
+        },
+        expr1: {
+          className: 'Sin',
+          expr: {
+            className: 'Add',
+            expr0: {
+              className: 'Variable',
+              name: 'x',
+            },
+            expr1: {
+              className: 'Constant',
+              value: -1,
+            },
+          },
+        },
+      })
+    )
+  })
+
   test('(2}', () => {
     const { expression, error } = parser.parse('(2}')
     expect(expression).toBeUndefined()
