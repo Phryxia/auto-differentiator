@@ -4,8 +4,6 @@
 
 **Parser Heaven** is a project parsing mathematical expressions. Maybe this is just reinventing the wheel for fun and personal education.
 
-This project is using TDD a little bit.
-
 In this project I'm trying to implement following features.
 
 ## Mathematical
