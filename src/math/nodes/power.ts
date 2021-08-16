@@ -1,7 +1,7 @@
 import { Expression, OptimizerOption, Variables } from '../model'
 import { isConstantOne, isConstantZero } from '../util'
 import { Add } from './additive'
-import Constant, { CONSTANT_ONE } from './constant'
+import Constant from './constant'
 import Log from './log'
 import { Div, Mul } from './multiplicative'
 import NamedConstant from './namedConstant'
@@ -47,16 +47,16 @@ export default class Power extends Expression {
     if (base instanceof Constant && exponent instanceof Constant)
       return new Constant(Math.pow(base.value, exponent.value))
 
-    if (isConstantZero(exponent)) return CONSTANT_ONE
+    if (isConstantZero(exponent)) return Constant.ONE
     if (isConstantOne(exponent)) return base
 
     // 역수처리
     if (exponent instanceof Constant && exponent.value < 0) {
       if (exponent.value === -1) {
-        return new Div(CONSTANT_ONE, base)
+        return new Div(Constant.ONE, base)
       }
       return new Div(
-        CONSTANT_ONE,
+        Constant.ONE,
         new Power(base, new Constant(-exponent.value))
       )
     }

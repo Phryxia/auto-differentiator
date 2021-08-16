@@ -1,6 +1,6 @@
 import { Add, Sub } from '.'
 import { Expression } from '../../model'
-import Constant, { CONSTANT_ONE } from '../constant'
+import Constant from '../constant'
 import { Div, Mul } from '../multiplicative'
 
 export interface Term {
@@ -57,7 +57,7 @@ function separateConstant(root: Expression, isNegative: boolean): Term {
             }
           } else {
             if (invert) {
-              out.remain = new Div(CONSTANT_ONE, child)
+              out.remain = new Div(Constant.ONE, child)
             } else {
               out.remain = child
             }
@@ -66,7 +66,7 @@ function separateConstant(root: Expression, isNegative: boolean): Term {
       })
 
       if (!out.remain) {
-        out.remain = CONSTANT_ONE
+        out.remain = Constant.ONE
       }
     } else {
       out.remain = node

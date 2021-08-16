@@ -1,5 +1,5 @@
 import { Expression, OptimizerOption, Variables } from '../model'
-import { CONSTANT_ZERO } from './constant'
+import Constant from './constant'
 
 /*
   pi나 e같은 것들을 표현하기 위함
@@ -25,7 +25,7 @@ export default class NamedConstant extends Expression {
   }
 
   differentiate(variableName: string) {
-    return CONSTANT_ZERO
+    return Constant.ZERO
   }
 
   optimizeConcrete(option: OptimizerOption): Expression {

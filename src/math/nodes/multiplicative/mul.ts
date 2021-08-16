@@ -1,7 +1,7 @@
 import { Expression, OptimizerOption, Variables } from '../../model'
 import { isConstantOne, isConstantZero } from '../../util'
 import { Add } from '../additive'
-import Constant, { CONSTANT_ZERO } from '../constant'
+import Constant from '../constant'
 import { isEquivalentMulDiv, optimizeMulDiv } from './common'
 
 export default class Mul extends Expression {
@@ -30,7 +30,7 @@ export default class Mul extends Expression {
     if (expr0 instanceof Constant && expr1 instanceof Constant)
       return new Constant(expr0.value * expr1.value)
 
-    if (isConstantZero(expr0) || isConstantZero(expr1)) return CONSTANT_ZERO
+    if (isConstantZero(expr0) || isConstantZero(expr1)) return Constant.ZERO
 
     if (isConstantOne(expr0)) return expr1
     if (isConstantOne(expr1)) return expr0

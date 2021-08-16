@@ -1,7 +1,6 @@
 import Parser, { TokenType } from '../../math/parser'
 import { Expression } from '../model'
 import { Add, Constant, NamedConstant, Variable } from '../nodes'
-import { CONSTANT_ONE, CONSTANT_ZERO } from '../nodes/constant'
 import { isSameStructure } from './common'
 
 const parser = new Parser()
@@ -325,12 +324,12 @@ describe('Parser.parse', () => {
 
   test('[0]', () => {
     const { expression } = parser.parse('[0]')
-    expect(expression).toBe(CONSTANT_ZERO)
+    expect(expression).toBe(Constant.ZERO)
   })
 
   test('{1}', () => {
     const { expression } = parser.parse('{1}')
-    expect(expression).toBe(CONSTANT_ONE)
+    expect(expression).toBe(Constant.ONE)
   })
 
   test('minimal reference check', () => {

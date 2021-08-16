@@ -1,6 +1,6 @@
 import { Expression, OptimizerOption, Variables } from '../../model'
 import { isConstantZero } from '../../util'
-import Constant, { CONSTANT_MINUS_ONE } from '../constant'
+import Constant from '../constant'
 import { Mul } from '../multiplicative'
 import { isEquivalentAddSub, optimizeAddSub } from './common'
 
@@ -30,7 +30,7 @@ export default class Sub extends Expression {
     if (expr0 instanceof Constant && expr1 instanceof Constant)
       return new Constant(expr0.value - expr1.value)
 
-    if (isConstantZero(expr0)) return new Mul(CONSTANT_MINUS_ONE, expr1)
+    if (isConstantZero(expr0)) return new Mul(Constant.MINUS_ONE, expr1)
     if (isConstantZero(expr1)) return expr0
 
     return optimizeAddSub(new Sub(expr0, expr1))

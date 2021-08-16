@@ -1,7 +1,7 @@
 import { Expression, OptimizerOption, Variables } from '../model'
 import { isConstantOne } from '../util'
 import { Sub } from './additive'
-import Constant, { CONSTANT_ZERO } from './constant'
+import Constant from './constant'
 import { Div, Mul } from './multiplicative'
 import NamedConstant from './namedConstant'
 import Power from './power'
@@ -52,7 +52,7 @@ export default class Log extends Expression {
     if (base instanceof Constant && expr instanceof Constant)
       return new Constant(Math.log(expr.value) / Math.log(base.value))
 
-    if (isConstantOne(expr)) return CONSTANT_ZERO
+    if (isConstantOne(expr)) return Constant.ZERO
 
     return new Log(base, expr)
   }

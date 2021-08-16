@@ -2,6 +2,56 @@
 
 모든 수식은 불변객체이다.
 
+## 중복된 상수와 변수
+
+하나의 수식을 파싱하거나 최적화했을 때, 그 수식에서 2회 이상 사용된 상수나 변수는 동일한 객체여야 한다. 예를 들어 `sin(2 * x) * x + 2`는 2개의 `x` 변수와 2개의 `2` 상수를 가지고 있는데, 이것을 해석했을 때 `Variable` 객체 2개, `Constant` 객체 2개가 만들어지는 것이 아니라 각각 1개씩만 만들어져야 한다.
+
+```ts
+const expr = Parser.parse('x + x').expression as Add
+
+console.log(expr.expr0 === expr.expr1) // true
+```
+
+이 규칙은 다른 파싱 컨텍스트 간에는 적용되지 않는다.
+
+```ts
+const exprA = Parser.parse('72').expression
+const exprB = Parser.parse('72').expression
+
+console.log(exprA === exprB) // false
+```
+
+다른 파싱 컨텍스트 끼리의 동일성을 보장해주지 않는 이유는, 메모리 누수 가능성이 존재하기 때문이다.
+
+현재는 `parse`를 실행할 때마다 격리된 `Pool`을 생성하도록 구현돼 있다. `parse`가 반환한 `Expression`으로 이루어진 트리는 사용이 끝나면 GC에 의해 수거될 것이고, 그 과정에서 내부적으로 생성한 `Pool` 인스턴스도 같이 수거된다.
+
+그런데 만약 파싱 컨텍스트를 넘어서서 동일한 상수/변수를 붙잡고 있으면 무슨 문제가 생길까? 반환한 `Expression`이 사용 종료되어도 상수와 변수는 메모리에 남아있게 된다. 그 상태에서 아래 코드를 실행하면?
+
+```ts
+const parser = new Parser()
+for (let n = 0; n < 100000; ++n) {
+  const { expression } = parser.parse(`${n + 1} * sin(x) + y`)
+
+  // do something with expression, but never store it to outside
+}
+```
+
+각각의 수식은 `for`문 안에서만 사용되고 수거되어야 하는데, 파싱 컨텍스트를 넘어서 상수/변수를 저장하게 되면 100만개의 (앞으로 사용되지 않을) 상수가 메모리에서 수거되지 못하고 존재하게 된다.
+
+특정 변수가 언제 사용 종료될 지 예측하는 것은 결정불가능(Undecidable)한 문제이기 때문에, 별도로 풀을 비우는 함수를 만들어줘야 한다. 이건 무척 어렵고 귀찮은데다가 사용성도 좋지 못하다.
+
+## Trivial Constant
+
+아래의 상수는 파싱 컨텍스트와 관계없이 모든 경우에 동일한 레퍼런스를 사용한다.
+
+- `0`: `Constant.ZERO`
+- `1`: `Constant.ONE`
+- `-1`: `Constant.MINUS_ONE`
+
+얘네는 엄청나게 자주 쓰고 그 수가 적기 때문에 메모리에 문제가 없다.
+
+단, 라이브러리 사용자가 임의로 `new Constant(0)`을 호출하면 별도의 객체가 생성된다. 그것까지는 막지 못하기 때문이다.
+
 # Math-Parser 문법
 
 평범한 수식의 문법이다.

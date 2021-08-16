@@ -1,5 +1,5 @@
 import { Expression, OptimizerOption, Variables } from '../model'
-import Constant, { CONSTANT_MINUS_ONE } from './constant'
+import Constant from './constant'
 import { Mul } from './multiplicative'
 import Power from './power'
 
@@ -40,7 +40,7 @@ export class Cos extends Expression {
 
   differentiate(variableName: string): Expression {
     return new Mul(
-      CONSTANT_MINUS_ONE,
+      Constant.MINUS_ONE,
       new Mul(this.expr.differentiate(variableName), new Sin(this.expr))
     )
   }
@@ -98,7 +98,7 @@ export class Csc extends Expression {
 
   differentiate(variableName: string): Expression {
     return new Mul(
-      CONSTANT_MINUS_ONE,
+      Constant.MINUS_ONE,
       new Mul(
         this.expr.differentiate(variableName),
         new Mul(this, new Cot(this.expr))
@@ -159,7 +159,7 @@ export class Cot extends Expression {
 
   differentiate(variableName: string): Expression {
     return new Mul(
-      CONSTANT_MINUS_ONE,
+      Constant.MINUS_ONE,
       new Mul(
         this.expr.differentiate(variableName),
         new Power(new Csc(this.expr), new Constant(2))

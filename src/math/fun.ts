@@ -21,7 +21,7 @@ import {
   Tanh,
   Variable,
 } from './nodes'
-import Constant, { CONSTANT_ONE } from './nodes/constant'
+import Constant from './nodes/constant'
 
 export function createRandomVariableName() {
   return 'x'
@@ -167,5 +167,5 @@ export function createRandomExpression(depthLimit: number): Expression {
   }
   threshold += diff
 
-  return CONSTANT_ONE
+  return Constant.ONE
 }

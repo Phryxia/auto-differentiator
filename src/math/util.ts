@@ -1,6 +1,6 @@
 import { Expression } from './model'
 import { Add, Div, Log, Mul, Power, Sub, Variable } from './nodes'
-import Constant, { CONSTANT_MINUS_ONE } from './nodes/constant'
+import Constant from './nodes/constant'
 
 export function isConstantZero(expr: Expression): boolean {
   return expr instanceof Constant && expr.value === 0
@@ -46,7 +46,7 @@ export function joinAdd(
   let lvalue
 
   if (expressions[0].isNegative) {
-    lvalue = new Mul(CONSTANT_MINUS_ONE, expressions[0].expr)
+    lvalue = new Mul(Constant.MINUS_ONE, expressions[0].expr)
   } else {
     lvalue = expressions[0].expr
   }

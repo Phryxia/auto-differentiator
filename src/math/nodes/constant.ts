@@ -24,8 +24,8 @@ export default class Constant extends Expression {
   isOptimized(): boolean {
     return true
   }
-}
 
-export const CONSTANT_ZERO = new Constant(0)
-export const CONSTANT_ONE = new Constant(1)
-export const CONSTANT_MINUS_ONE = new Constant(-1)
+  public static readonly ZERO = new Constant(0)
+  public static readonly ONE = new Constant(1)
+  public static readonly MINUS_ONE = new Constant(-1)
+}

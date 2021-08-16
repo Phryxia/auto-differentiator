@@ -1,3 +1,4 @@
+import { Pool } from '../../common'
 import { Expression } from '../model'
 import {
   Add,
@@ -22,7 +23,6 @@ import {
   Tanh,
   Variable,
 } from '../nodes'
-import { CONSTANT_ZERO } from '../nodes/constant'
 
 export enum TokenType {
   NUMBER = 'number',
@@ -283,6 +283,11 @@ export default class Parser {
 
     let token = getToken()
 
+    // This stores constants having same value and variables having same name.
+    // For one string expression, they have to be same reference.
+    const constantPool = new Pool(Constant)
+    const variablePool = new Pool(Variable)
+
     function throwError(name: string, expected: string) {
       if (token.type === TokenType.EOF) {
         throw new Error(
@@ -297,6 +302,7 @@ export default class Parser {
         }), expected ${expected}\n${str}\n${' '.repeat(token.position)}^\n`
       )
     }
+
     /*
       Expr := Term | Expr '+' Term | Expr '-' Term
       Term := Expo | Term '*' Expo | Term '/' Expo
@@ -385,7 +391,13 @@ export default class Parser {
       if (token.type === TokenType.NUMBER) {
         const num = token.content
         token = getToken()
-        return new Constant(parseFloat(num))
+
+        const value = parseFloat(num)
+        if (value === 0) return Constant.ZERO
+        if (value === 1) return Constant.ONE
+        if (value === -1) return Constant.MINUS_ONE
+
+        return constantPool.get(value)
       }
 
       // 식별자
@@ -461,7 +473,7 @@ export default class Parser {
         const variableName = token.content
         token = getToken()
 
-        return new Variable(variableName)
+        return variablePool.get(variableName)
       }
 
       // 괄호
@@ -485,7 +497,7 @@ export default class Parser {
       throwError('MathParser.parse', 'identifier or (')
 
       // Unrechable Code
-      return CONSTANT_ZERO
+      return Constant.ZERO
     }
 
     try {

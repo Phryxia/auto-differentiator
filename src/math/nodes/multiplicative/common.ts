@@ -1,6 +1,6 @@
 import { Bucket, Expression } from '../../model'
 import { joinAdd } from '../../util'
-import Constant, { CONSTANT_ONE } from '../constant'
+import Constant from '../constant'
 import Power from '../power'
 import Div from './div'
 import transformToExponent, { Exponent } from './exponent'
@@ -190,7 +190,7 @@ export function optimizeMulDiv(node: Mul | Div): Expression {
       }
     } else {
       if (isInverted) {
-        lvalue = new Div(CONSTANT_ONE, rvalue)
+        lvalue = new Div(Constant.ONE, rvalue)
       } else {
         lvalue = rvalue
       }
@@ -207,7 +207,7 @@ export function optimizeMulDiv(node: Mul | Div): Expression {
   }
 
   if (!lvalue) {
-    lvalue = CONSTANT_ONE
+    lvalue = Constant.ONE
   }
 
   return lvalue

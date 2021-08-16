@@ -1,7 +1,7 @@
 import { Expression, OptimizerOption, Variables } from '../../model'
 import { isConstantMinusOne, isConstantOne, isConstantZero } from '../../util'
 import { Sub } from '../additive'
-import Constant, { CONSTANT_MINUS_ONE, CONSTANT_ZERO } from '../constant'
+import Constant from '../constant'
 import Power from '../power'
 import { isEquivalentMulDiv, optimizeMulDiv } from './common'
 import Mul from './mul'
@@ -35,12 +35,12 @@ export default class Div extends Expression {
     if (expr0 instanceof Constant && expr1 instanceof Constant)
       return new Constant(expr0.value / expr1.value)
 
-    if (isConstantZero(expr0)) return CONSTANT_ZERO
+    if (isConstantZero(expr0)) return Constant.ZERO
     if (isConstantZero(expr1)) return new Constant(NaN)
 
     if (isConstantOne(expr1)) return expr0
 
-    if (isConstantMinusOne(expr1)) return new Mul(CONSTANT_MINUS_ONE, expr0)
+    if (isConstantMinusOne(expr1)) return new Mul(Constant.MINUS_ONE, expr0)
 
     return optimizeMulDiv(new Div(expr0, expr1))
   }

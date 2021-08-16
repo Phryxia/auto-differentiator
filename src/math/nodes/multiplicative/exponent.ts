@@ -1,6 +1,6 @@
 import { Div, Mul } from '.'
 import { Expression } from '../../model'
-import { CONSTANT_MINUS_ONE, CONSTANT_ONE } from '../constant'
+import Constant from '../constant'
 import Power from '../power'
 
 export interface Exponent {
@@ -34,12 +34,12 @@ function separateConstant(root: Expression, isInverted: boolean): Exponent {
     return {
       base: root.expr0,
       exponent: isInverted
-        ? new Mul(CONSTANT_MINUS_ONE, root.expr1)
+        ? new Mul(Constant.MINUS_ONE, root.expr1)
         : root.expr1,
     }
   return {
     base: root,
-    exponent: isInverted ? CONSTANT_MINUS_ONE : CONSTANT_ONE,
+    exponent: isInverted ? Constant.MINUS_ONE : Constant.ONE,
   }
 }
 

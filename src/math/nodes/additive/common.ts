@@ -1,5 +1,5 @@
 import { Bucket, Expression } from '../../model'
-import Constant, { CONSTANT_ZERO } from '../constant'
+import Constant from '../constant'
 import { Div, Mul } from '../multiplicative'
 import Add from './add'
 import Sub from './sub'
@@ -81,7 +81,7 @@ export function optimizeAddSub(node: Add | Sub): Expression {
 
   // 변수는 전부 상쇄되어 0이고 상수항이 없는 경우
   if (!lvalue) {
-    lvalue = CONSTANT_ZERO
+    lvalue = Constant.ZERO
   }
 
   return lvalue

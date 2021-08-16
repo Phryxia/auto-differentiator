@@ -1,5 +1,5 @@
 import { Expression, OptimizerOption, Variables } from '../model'
-import { CONSTANT_ONE, CONSTANT_ZERO } from './constant'
+import Constant from './constant'
 
 export default class Variable extends Expression {
   constructor(public readonly name: string) {
@@ -11,8 +11,8 @@ export default class Variable extends Expression {
   }
 
   differentiate(variableName: string) {
-    if (this.name === variableName) return CONSTANT_ONE
-    else return CONSTANT_ZERO
+    if (this.name === variableName) return Constant.ONE
+    else return Constant.ZERO
   }
 
   optimizeConcrete(option: OptimizerOption): Expression {
