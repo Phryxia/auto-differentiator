@@ -7,6 +7,10 @@ export default class Variable extends Expression {
   }
 
   evaluate(variables: Variables) {
+    if (variables[this.name] === undefined)
+      throw new Error(
+        `[Variable.evalute] ${this.name} is not defined in the given parameter`
+      )
     return variables[this.name]
   }
 
