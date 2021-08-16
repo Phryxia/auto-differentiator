@@ -2,21 +2,25 @@
 
 [#Link](https://parser-heaven.netlify.app/)
 
-**Parser Heaven**은 취미로 작업 중인 타입스크립트 수식 처리 프로젝트입니다. 아래의 기능들을 개발 중에 있으며, 완성도가 높아지면 추후 라이브러리화 할 예정입니다.
+**Parser Heaven** is a project parsing mathematical expressions. Maybe this is just reinventing the wheel for fun and personal education.
 
-## 수식
+This project is using TDD a little bit.
 
-- 수식 인식
-- 수식 렌더링
-- 수식 평가
-- 수식 최적화
-- 수식의 해석적 동일성 판단 (ex: `x^2 + 2 * x + 1` vs `(x + 1)^2`)
-- 수식의 해석적 미분
+In this project I'm trying to implement following features.
 
-## 부울대수
+## Mathematical
 
-- 부울대수 인식
-- 부울대수 렌더링
-- 부울대수 평가
-- 부울식의 논리적 동일성 판단
-- CNF, DNF 구하기
+- Recognition
+- Rendering
+- Evaluation
+- Optimization
+- Determine equivalence of two given expressions
+- Differentiation
+
+## Boolean Algebra
+
+- Recognizing boolean expressions
+- Rendering boolean expressions
+- Evaluates boolean expressions
+- Determine equivalence of two given expressions
+- Computing CNF and DNF
