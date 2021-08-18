@@ -61,6 +61,7 @@ const FUNCTION_NAMES: string[] = [
   'sech',
   'coth',
   'sqrt',
+  'exp',
 ]
 
 const NAMED_CONSTANTS: string[] = ['e', 'pi']
@@ -419,6 +420,8 @@ export default class Parser {
           const expr = parseLeaf()
 
           switch (functionName) {
+            case 'exp':
+              return new Power(NamedConstant.E, expr)
             case 'log':
             case 'ln':
               return new Log(expr)
