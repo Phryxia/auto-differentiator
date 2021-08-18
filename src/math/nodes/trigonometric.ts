@@ -1,4 +1,4 @@
-import { Expression, OptimizerOption, Variables } from '../model'
+import { ConstantPool, Expression, OptimizerOption, Variables } from '../model'
 import Constant from './constant'
 import { Mul } from './multiplicative'
 import Power from './power'
@@ -12,14 +12,23 @@ export class Sin extends Expression {
     return Math.sin(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
-    return new Mul(this.expr.differentiate(variableName), new Cos(this.expr))
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
+    return new Mul(
+      this.expr.differentiate(variableName, constantPool),
+      new Cos(this.expr)
+    )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(Math.sin(expr.value))
+    if (expr instanceof Constant) return constantPool.get(Math.sin(expr.value))
 
     return new Sin(expr)
   }
@@ -38,17 +47,26 @@ export class Cos extends Expression {
     return Math.cos(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
       Constant.MINUS_ONE,
-      new Mul(this.expr.differentiate(variableName), new Sin(this.expr))
+      new Mul(
+        this.expr.differentiate(variableName, constantPool),
+        new Sin(this.expr)
+      )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(Math.cos(expr.value))
+    if (expr instanceof Constant) return constantPool.get(Math.cos(expr.value))
 
     return new Cos(expr)
   }
@@ -67,17 +85,23 @@ export class Tan extends Expression {
     return Math.tan(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
-      this.expr.differentiate(variableName),
-      new Power(new Sec(this.expr), new Constant(2))
+      this.expr.differentiate(variableName, constantPool),
+      new Power(new Sec(this.expr), constantPool.get(2))
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(Math.tan(expr.value))
+    if (expr instanceof Constant) return constantPool.get(Math.tan(expr.value))
 
     return new Tan(expr)
   }
@@ -96,18 +120,24 @@ export class Csc extends Expression {
     return 1 / Math.sin(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
       Constant.MINUS_ONE,
       new Mul(
-        this.expr.differentiate(variableName),
+        this.expr.differentiate(variableName, constantPool),
         new Mul(this, new Cot(this.expr))
       )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
     if (expr instanceof Constant) return new Constant(1 / Math.sin(expr.value))
 
@@ -128,17 +158,24 @@ export class Sec extends Expression {
     return 1 / Math.cos(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
-      this.expr.differentiate(variableName),
+      this.expr.differentiate(variableName, constantPool),
       new Mul(this, new Tan(this.expr))
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(1 / Math.cos(expr.value))
+    if (expr instanceof Constant)
+      return constantPool.get(1 / Math.cos(expr.value))
 
     return new Sec(expr)
   }
@@ -157,20 +194,27 @@ export class Cot extends Expression {
     return 1 / Math.tan(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
       Constant.MINUS_ONE,
       new Mul(
-        this.expr.differentiate(variableName),
-        new Power(new Csc(this.expr), new Constant(2))
+        this.expr.differentiate(variableName, constantPool),
+        new Power(new Csc(this.expr), constantPool.get(2))
       )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(1 / Math.tan(expr.value))
+    if (expr instanceof Constant)
+      return constantPool.get(1 / Math.tan(expr.value))
 
     return new Cot(expr)
   }

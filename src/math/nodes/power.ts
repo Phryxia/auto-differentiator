@@ -1,4 +1,4 @@
-import { Expression, OptimizerOption, Variables } from '../model'
+import { ConstantPool, Expression, OptimizerOption, Variables } from '../model'
 import { isConstantOne, isConstantZero } from '../util'
 import { Add } from './additive'
 import Constant from './constant'
@@ -22,27 +22,39 @@ export default class Power extends Expression {
     )
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     if (this.expr0 === NamedConstant.E) return this
 
     return new Mul(
       this,
       new Add(
-        new Mul(this.expr1.differentiate(variableName), new Log(this.expr0)),
+        new Mul(
+          this.expr1.differentiate(variableName, constantPool),
+          new Log(this.expr0)
+        ),
         new Mul(
           this.expr1,
-          new Div(this.expr0.differentiate(variableName), this.expr0)
+          new Div(
+            this.expr0.differentiate(variableName, constantPool),
+            this.expr0
+          )
         )
       )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const base = this.expr0.optimize(option)
-    const exponent = this.expr1.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const base = this.expr0.optimize(option, constantPool)
+    const exponent = this.expr1.optimize(option, constantPool)
 
     if (base instanceof Constant && exponent instanceof Constant)
-      return new Constant(Math.pow(base.value, exponent.value))
+      return constantPool.get(Math.pow(base.value, exponent.value))
 
     if (isConstantZero(exponent)) return Constant.ONE
     if (isConstantOne(exponent)) return base
@@ -54,7 +66,7 @@ export default class Power extends Expression {
       }
       return new Div(
         Constant.ONE,
-        new Power(base, new Constant(-exponent.value))
+        new Power(base, constantPool.get(-exponent.value))
       )
     }
 
@@ -69,7 +81,8 @@ export default class Power extends Expression {
     // 지수법칙
     if (base instanceof Power)
       return new Power(base.expr0, new Mul(base.expr1, exponent)).optimize(
-        option
+        option,
+        constantPool
       )
 
     return new Power(base, exponent)

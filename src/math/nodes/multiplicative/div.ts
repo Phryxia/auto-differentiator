@@ -1,4 +1,9 @@
-import { Expression, OptimizerOption, Variables } from '../../model'
+import {
+  ConstantPool,
+  Expression,
+  OptimizerOption,
+  Variables,
+} from '../../model'
 import { isConstantMinusOne, isConstantOne, isConstantZero } from '../../util'
 import { Sub } from '../additive'
 import Constant from '../constant'
@@ -18,25 +23,37 @@ export default class Div extends Expression {
     return this.expr0.evaluate(variables) / this.expr1.evaluate(variables)
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Div(
       new Sub(
-        new Mul(this.expr0.differentiate(variableName), this.expr1),
-        new Mul(this.expr0, this.expr1.differentiate(variableName))
+        new Mul(
+          this.expr0.differentiate(variableName, constantPool),
+          this.expr1
+        ),
+        new Mul(
+          this.expr0,
+          this.expr1.differentiate(variableName, constantPool)
+        )
       ),
-      new Power(this.expr1, new Constant(2))
+      new Power(this.expr1, constantPool.get(2))
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr0 = this.expr0.optimize(option)
-    const expr1 = this.expr1.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr0 = this.expr0.optimize(option, constantPool)
+    const expr1 = this.expr1.optimize(option, constantPool)
 
     if (expr0 instanceof Constant && expr1 instanceof Constant)
       return new Constant(expr0.value / expr1.value)
 
     if (isConstantZero(expr0)) return Constant.ZERO
-    if (isConstantZero(expr1)) return new Constant(NaN)
+    if (isConstantZero(expr1)) return constantPool.get(NaN)
 
     if (isConstantOne(expr1)) return expr0
 

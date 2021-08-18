@@ -1,4 +1,4 @@
-import { Expression, OptimizerOption, Variables } from '../model'
+import { ConstantPool, Expression, OptimizerOption, Variables } from '../model'
 
 export default class Constant extends Expression {
   constructor(public readonly value: number) {
@@ -9,11 +9,17 @@ export default class Constant extends Expression {
     return this.value
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return Constant.ZERO
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
     return this
   }
 

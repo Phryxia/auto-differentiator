@@ -1,4 +1,4 @@
-import { Expression, OptimizerOption, Variables } from '../model'
+import { ConstantPool, Expression, OptimizerOption, Variables } from '../model'
 import Constant from './constant'
 import { Mul } from './multiplicative'
 import Power from './power'
@@ -12,12 +12,21 @@ export class Sinh extends Expression {
     return Math.sinh(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
-    return new Mul(this.expr.differentiate(variableName), new Cosh(this.expr))
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
+    return new Mul(
+      this.expr.differentiate(variableName, constantPool),
+      new Cosh(this.expr)
+    )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
     if (expr instanceof Constant) return new Constant(Math.sinh(expr.value))
 
@@ -38,14 +47,23 @@ export class Cosh extends Expression {
     return Math.cosh(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
-    return new Mul(this.expr.differentiate(variableName), new Sinh(this.expr))
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
+    return new Mul(
+      this.expr.differentiate(variableName, constantPool),
+      new Sinh(this.expr)
+    )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(Math.cosh(expr.value))
+    if (expr instanceof Constant) return constantPool.get(Math.cosh(expr.value))
 
     return new Cosh(expr)
   }
@@ -64,17 +82,23 @@ export class Tanh extends Expression {
     return Math.tanh(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
-      this.expr.differentiate(variableName),
-      new Power(new Sech(this.expr), new Constant(2))
+      this.expr.differentiate(variableName, constantPool),
+      new Power(new Sech(this.expr), constantPool.get(2))
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(Math.tanh(expr.value))
+    if (expr instanceof Constant) return constantPool.get(Math.tanh(expr.value))
 
     return new Tanh(expr)
   }
@@ -93,20 +117,27 @@ export class Csch extends Expression {
     return 1 / Math.sinh(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
-      new Constant(-1),
+      Constant.MINUS_ONE,
       new Mul(
-        new Mul(this.expr.differentiate(variableName), this),
+        new Mul(this.expr.differentiate(variableName, constantPool), this),
         new Coth(this.expr)
       )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(1 / Math.sinh(expr.value))
+    if (expr instanceof Constant)
+      return constantPool.get(1 / Math.sinh(expr.value))
 
     return new Csch(expr)
   }
@@ -125,20 +156,27 @@ export class Sech extends Expression {
     return 1 / Math.cosh(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
       Constant.MINUS_ONE,
       new Mul(
-        new Mul(this.expr.differentiate(variableName), this),
+        new Mul(this.expr.differentiate(variableName, constantPool), this),
         new Tanh(this.expr)
       )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(1 / Math.cosh(expr.value))
+    if (expr instanceof Constant)
+      return constantPool.get(1 / Math.cosh(expr.value))
 
     return new Sech(expr)
   }
@@ -157,20 +195,27 @@ export class Coth extends Expression {
     return 1 / Math.tanh(this.expr.evaluate(variables))
   }
 
-  differentiate(variableName: string): Expression {
+  differentiateConcrete(
+    variableName: string,
+    constantPool: ConstantPool
+  ): Expression {
     return new Mul(
       Constant.MINUS_ONE,
       new Mul(
-        this.expr.differentiate(variableName),
-        new Power(new Csch(this.expr), new Constant(2))
+        this.expr.differentiate(variableName, constantPool),
+        new Power(new Csch(this.expr), constantPool.get(2))
       )
     )
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
-    const expr = this.expr.optimize(option)
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
+    const expr = this.expr.optimize(option, constantPool)
 
-    if (expr instanceof Constant) return new Constant(1 / Math.tanh(expr.value))
+    if (expr instanceof Constant)
+      return constantPool.get(1 / Math.tanh(expr.value))
 
     return new Coth(expr)
   }

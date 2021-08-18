@@ -1,4 +1,4 @@
-import { Expression, OptimizerOption, Variables } from '../model'
+import { ConstantPool, Expression, OptimizerOption, Variables } from '../model'
 import Constant from './constant'
 
 /*
@@ -24,11 +24,14 @@ export default class NamedConstant extends Expression {
     return this.value
   }
 
-  differentiate(variableName: string) {
+  differentiateConcrete(variableName: string, constantPool: ConstantPool) {
     return Constant.ZERO
   }
 
-  optimizeConcrete(option: OptimizerOption): Expression {
+  optimizeConcrete(
+    option: OptimizerOption,
+    constantPool: ConstantPool
+  ): Expression {
     return this
   }
 
