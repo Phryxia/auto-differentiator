@@ -421,7 +421,7 @@ export default class Parser {
           switch (functionName) {
             case 'log':
             case 'ln':
-              return new Log(expr, NamedConstant.E)
+              return new Log(expr)
             case 'sin':
               return new Sin(expr)
             case 'cos':

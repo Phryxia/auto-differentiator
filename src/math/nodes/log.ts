@@ -9,7 +9,7 @@ import Power from './power'
 export default class Log extends Expression {
   constructor(
     public readonly expr: Expression,
-    public readonly base: Expression
+    public readonly base: Expression = NamedConstant.E
   ) {
     super()
   }

@@ -28,10 +28,7 @@ export default class Power extends Expression {
     return new Mul(
       this,
       new Add(
-        new Mul(
-          this.expr1.differentiate(variableName),
-          new Log(this.expr0, NamedConstant.E)
-        ),
+        new Mul(this.expr1.differentiate(variableName), new Log(this.expr0)),
         new Mul(
           this.expr1,
           new Div(this.expr0.differentiate(variableName), this.expr0)
