@@ -450,7 +450,7 @@ export default class Parser {
             case 'coth':
               return new Coth(expr)
             case 'sqrt':
-              return new Power(expr, new Constant(0.5))
+              return new Power(expr, constantPool.get(0.5))
             default:
               throwError(
                 'MathParser.parse',
