@@ -16,4 +16,10 @@ describe('nodes.Variable', () => {
     expect(x.differentiate('x')).toBe(Constant.ONE)
     expect(x.differentiate('y')).toBe(Constant.ZERO)
   })
+
+  test('isEquivalent', () => {
+    expect(x.isEquivalent(new Variable('x'))).toBeTruthy()
+    expect(x.isEquivalent(new Variable('y'))).toBeFalsy()
+    expect(x.isEquivalent(Constant.ZERO)).toBeFalsy()
+  })
 })
