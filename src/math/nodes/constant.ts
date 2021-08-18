@@ -10,7 +10,7 @@ export default class Constant extends Expression {
   }
 
   differentiate(variableName: string): Expression {
-    return new Constant(0)
+    return Constant.ZERO
   }
 
   optimizeConcrete(option: OptimizerOption): Expression {
