@@ -36,7 +36,11 @@ export default class NamedConstant extends Expression {
   }
 
   isEquivalent(expression: Expression): boolean {
-    return expression instanceof NamedConstant && this.name === expression.name
+    return (
+      expression instanceof NamedConstant &&
+      this.name === expression.name &&
+      this.value === expression.value
+    )
   }
 
   isOptimized(): boolean {

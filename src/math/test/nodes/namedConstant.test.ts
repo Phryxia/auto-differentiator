@@ -14,4 +14,10 @@ describe('nodes.NamedConstant', () => {
   test('differentiate', () => {
     expect(tsubasa.differentiate('x')).toBe(Constant.ZERO)
   })
+
+  test('isEquivalent', () => {
+    expect(tsubasa.isEquivalent(tsubasa)).toBeTruthy()
+    expect(tsubasa.isEquivalent(NamedConstant.PI)).toBeFalsy()
+    expect(tsubasa.isEquivalent(new NamedConstant('tsubasa', 72))).toBeFalsy()
+  })
 })
