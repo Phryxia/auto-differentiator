@@ -66,3 +66,29 @@ export function isSameTree(expr0?: Expression, expr1?: Expression): boolean {
 
   return true
 }
+
+// Since many modules are mutually related, it's hard to test their equivalence using them.
+// Add.optimize may call Mul.optimize, and Mul.optimize again may call Add.optimize with its child.
+// This makes circular dependency between test codes.
+//
+// Also examining tree can be exponentially complex:
+// For example, differentiation of csc(x) is -cot(x)*csc(x) which can be expressed
+// as many form ((-1) * cot(x)) * csc(x) or (-1) * (cot(x) * csc(x)) ...
+//
+// Therfore for simple cases I use numerical similarity by injecting x value as some range.
+// Two expressions must only use the variable x.
+//
+// Note that this never guarantees strict mathematical equivalence. Only use this to small test.
+export function testNumericalSimilarity(
+  expr0: Expression,
+  expr1: Expression,
+  xMin: number,
+  xMax: number,
+  xRes: number
+): void {
+  let x = xMin
+  while (x <= xMax) {
+    expect(expr0.evaluate({ x })).toBeCloseTo(expr1.evaluate({ x }))
+    x += xRes
+  }
+}
