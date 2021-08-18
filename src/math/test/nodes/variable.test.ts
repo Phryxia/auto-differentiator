@@ -5,7 +5,7 @@ describe('nodes.Variable', () => {
 
   test('evaluate', () => {
     expect(x.evaluate({ x: 283 })).toBe(283)
-    expect(x.evaluate({ y: 111 })).toThrowError()
+    expect(() => x.evaluate({ y: 111 })).toThrowError()
   })
 
   test('optimize', () => {
