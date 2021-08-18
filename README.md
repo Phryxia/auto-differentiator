@@ -1,3 +1,7 @@
+# Warning
+
+This project is under construction. Currently this is not stable, not user friendly, extremly bug fragil and not guaranteed to work properly. Just... Don't use this until I delete this paragraph.
+
 # Parser Heaven
 
 [#Link](https://parser-heaven.netlify.app/)
@@ -22,3 +26,7 @@ In this project I'm trying to implement following features.
 - Evaluates boolean expressions
 - Determine equivalence of two given expressions
 - Computing CNF and DNF
+
+# Status
+
+I'm trying to use TDD but I don't take that procedure strictly. Currently I'm working on writing test codes to assure everything to do right things.
