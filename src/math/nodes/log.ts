@@ -66,7 +66,7 @@ export default class Log extends Expression {
 
     if (isConstantOne(expr)) return Constant.ZERO
 
-    return new Log(base, expr)
+    return new Log(expr, base)
   }
 
   isEquivalent(expression: Expression): boolean {
