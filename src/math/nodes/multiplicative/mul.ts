@@ -15,6 +15,8 @@ export default class Mul extends Expression {
     public readonly expr1: Expression
   ) {
     super()
+    this.addChild(expr0)
+    this.addChild(expr1)
   }
 
   evaluate(variables: Variables): number {

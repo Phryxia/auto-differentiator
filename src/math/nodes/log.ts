@@ -12,6 +12,8 @@ export default class Log extends Expression {
     public readonly base: Expression = NamedConstant.E
   ) {
     super()
+    this.addChild(expr)
+    this.addChild(base)
   }
 
   evaluate(variables: Variables): number {

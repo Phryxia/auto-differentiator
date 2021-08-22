@@ -6,6 +6,7 @@ import Power from './power'
 export class Sin extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -41,6 +42,7 @@ export class Sin extends Expression {
 export class Cos extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -79,6 +81,7 @@ export class Cos extends Expression {
 export class Tan extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -114,6 +117,7 @@ export class Tan extends Expression {
 export class Csc extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -152,6 +156,7 @@ export class Csc extends Expression {
 export class Sec extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -188,6 +193,7 @@ export class Sec extends Expression {
 export class Cot extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {

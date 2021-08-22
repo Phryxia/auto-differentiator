@@ -4,6 +4,7 @@ import Constant from './constant'
 export default class Variable extends Expression {
   constructor(public readonly name: string) {
     super()
+    this.assignVariable(name)
   }
 
   evaluate(variables: Variables): number {

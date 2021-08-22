@@ -6,6 +6,7 @@ import Power from './power'
 export class Sinh extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -41,6 +42,7 @@ export class Sinh extends Expression {
 export class Cosh extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -76,6 +78,7 @@ export class Cosh extends Expression {
 export class Tanh extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -111,6 +114,7 @@ export class Tanh extends Expression {
 export class Csch extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -150,6 +154,7 @@ export class Csch extends Expression {
 export class Sech extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {
@@ -189,6 +194,7 @@ export class Sech extends Expression {
 export class Coth extends Expression {
   constructor(public readonly expr: Expression) {
     super()
+    this.addChild(expr)
   }
 
   evaluate(variables: Variables): number {

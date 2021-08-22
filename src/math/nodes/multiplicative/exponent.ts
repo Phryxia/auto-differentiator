@@ -3,13 +3,13 @@ import { Expression } from '../../model'
 import Constant from '../constant'
 import Power from '../power'
 
-export interface Exponent {
+export interface Factor {
   exponent: Expression
   base: Expression
 }
 
 // 밑의 엔트리가 되는 노드들 찾기
-function findExponentRoots(root: Mul | Div): [Expression, boolean][] {
+function findFactorRoots(root: Mul | Div): [Expression, boolean][] {
   const out: [Expression, boolean][] = []
 
   function traverse(node: Mul | Div, isInverted: boolean = false) {
@@ -29,7 +29,7 @@ function findExponentRoots(root: Mul | Div): [Expression, boolean][] {
 }
 
 // 밑과 지수를 분리
-function separateConstant(root: Expression, isInverted: boolean): Exponent {
+function separateExponent(root: Expression, isInverted: boolean): Factor {
   if (root instanceof Power)
     return {
       base: root.expr0,
@@ -43,8 +43,8 @@ function separateConstant(root: Expression, isInverted: boolean): Exponent {
   }
 }
 
-export default function transformToExponent(root: Mul | Div): Exponent[] {
-  const roots = findExponentRoots(root)
+export default function transformToFactors(root: Mul | Div): Factor[] {
+  const roots = findFactorRoots(root)
 
-  return roots.map(([root, isNegative]) => separateConstant(root, isNegative))
+  return roots.map(([root, isNegative]) => separateExponent(root, isNegative))
 }

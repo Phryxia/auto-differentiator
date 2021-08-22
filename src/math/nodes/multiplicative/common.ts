@@ -3,7 +3,7 @@ import { joinAdd } from '../../util'
 import Constant from '../constant'
 import Power from '../power'
 import Div from './div'
-import transformToExponent, { Exponent } from './exponent'
+import transformToFactors, { Factor } from './exponent'
 import Mul from './mul'
 
 function collectMultiplyingChilds(
@@ -114,10 +114,10 @@ export function isEquivalentMulDiv(
 }
 
 export function optimizeMulDiv(node: Mul | Div): Expression {
-  const exponents = transformToExponent(node)
+  const exponents = transformToFactors(node)
 
   // [x항들, xy항들, a항들 ...]
-  let shapeBank: Exponent[][] = []
+  let shapeBank: Factor[][] = []
 
   // 같은 밑으로 분류
   let constantValue = 1
@@ -141,7 +141,7 @@ export function optimizeMulDiv(node: Mul | Div): Expression {
     if (isReserved[i]) continue
     isReserved[i] = true
 
-    const sameShape: Exponent[] = [exponents[i]]
+    const sameShape: Factor[] = [exponents[i]]
     for (let j = i + 1; j < exponents.length; ++j) {
       if (isReserved[j]) continue
 

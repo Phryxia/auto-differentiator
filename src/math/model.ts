@@ -28,6 +28,14 @@ export class ConstantPool extends Pool<Constant, number> {
 export abstract class Expression {
   private _isOptimized: boolean = false
 
+  // This is used to track whether some variable is used or not.
+  // Variable class touches this
+  private usedVariables: string[] = []
+
+  // You have to provide every child node to this array
+  // by calling addChild().
+  private readonly children: Expression[] = []
+
   // Must return evaluated number using variables.
   public abstract evaluate(variables: Variables): number
 
@@ -94,6 +102,33 @@ export abstract class Expression {
   // (for example, see Variable class)
   public isOptimized(): boolean {
     return this._isOptimized
+  }
+
+  // Assign used variable. Duplication is protected automatically so you don't have
+  // to worry about that. This is used only in Variable class
+  protected assignVariable(variableName: string): void {
+    if (!this.usedVariables.some((usedName) => usedName === variableName)) {
+      this.usedVariables.push(variableName)
+    }
+  }
+
+  // Return the used variables. This doesn't sorted.
+  // Note that any changes of returned array doesn't affect original.
+  public getUsedVariables(): string[] {
+    return [...this.usedVariables]
+  }
+
+  // Simply add a child. You must call this when you construct your own calculation node.
+  // See any built-in nodes for example.
+  protected addChild(expr: Expression): void {
+    this.children.push(expr)
+    this.usedVariables = [...this.usedVariables, ...expr.usedVariables]
+  }
+
+  // Return its children.
+  // Note that any changes of returned array doesn't affect original
+  public getChildren(): Expression[] {
+    return [...this.children]
   }
 }
 

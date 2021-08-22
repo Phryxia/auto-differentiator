@@ -73,3 +73,49 @@ export function isMultiplicative(expr: Expression): boolean {
 export function isBinary(expr: Expression) {
   return isAdditive(expr) || isMultiplicative(expr) || expr instanceof Power
 }
+
+// Get every combination of non negative integers having given sum
+// ex) getPairs(3, 4) = [[0, 0, 4], [0, 1, 3], [0, 2, 2], ..., [3, 1, 0], [4, 0, 0]]
+export function getSumPairs(numOfVariables: number, sum: number): number[][] {
+  if (numOfVariables <= 0 || !Number.isInteger(numOfVariables))
+    throw new Error('numOfVariables must be positive integer')
+
+  if (sum <= 0 || !Number.isInteger(sum))
+    throw new Error('sum must be positive integer')
+
+  const result: number[][] = []
+  const stack: number[] = []
+  let partialSum = 0
+
+  function _getPairs(depth: number) {
+    if (depth >= numOfVariables) {
+      result.push([...stack])
+      return
+    }
+
+    if (depth === numOfVariables - 1) {
+      const value = sum - partialSum
+      stack.push(value)
+      _getPairs(depth + 1)
+      stack.pop()
+      return
+    }
+
+    for (let n = 0; n <= sum - partialSum; ++n) {
+      stack.push(n)
+      partialSum += n
+      _getPairs(depth + 1)
+      stack.pop()
+      partialSum -= n
+    }
+  }
+
+  _getPairs(0)
+
+  return result
+}
+
+// https://en.wikipedia.org/wiki/Euclidean_algorithm#Procedure
+export function gcd(a: number, b: number): number {
+  return b > 0 ? gcd(b, a % b) : a
+}
